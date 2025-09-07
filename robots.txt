@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://wolfyy59.github.io/hak6/sitemap.xml
