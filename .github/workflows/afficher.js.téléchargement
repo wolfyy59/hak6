@@ -1,0 +1,18 @@
+
+$('#afficher').click(function(e){
+     $('#main_section').toggle();
+        $('#cards').toggle();
+      listeCandidat()
+});
+   
+  
+ function listeCandidat(){
+       
+         
+//         $('#workflow').append('<ul><li><div><time>Choix du périmètre de mise en valeur</time>Liste des périmètres</div></li><li><div><time>Demande en ligne</time> Remplir le formulaire correspondant au périmètre choisi et joindre dossier</div></li><li><div><time>Examen du dossier</time>Traitement du dossier par un comité local d’investissement agricole et validation par procès-verbal</div></li><li><div> <time>Identification et acceptation de la parcelle</time>   Visite de la parcelle et signature du PV d’acceptationde terre</div></li><li><div><time>Installation sur terrain</time>  L’ONTA installe l’investisseur dans la parcelle de terre</div></li><li><div><time>Signature du cahier des charges</time> L’ONTA signe avec l’investisseur le cahier des charges</div></li><li><div><time>Etablissement de l’acte de concession</time> L’acte de concession est établi par les services des domaines après envoi du dossier par l’ONTA</div></li></ul>');
+        
+    }
+
+
+
+  

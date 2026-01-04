@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<!-- saved from url=(0020)https://www.onta.dz/ -->
+<html lang="ar"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title data-tag="app-title">الديوان الوطني للأراضي الفلاحية</title>
+    <link rel="stylesheet" href=" bootstrap.min.css">
+    <link rel="stylesheet" href=" font-awesome.min.css">
+    <link rel="stylesheet" href=" material-icons.min.css">
+    <link rel="stylesheet" href=" -Team-Rotating-Cards-BS4-.css">
+    <link rel="stylesheet" href=" Article-List.css">
+    <link rel="stylesheet" href=" BreakingNews.css">
+    <!-- <link rel="stylesheet" href="assets/css/BreakingNewss.css"> -->
+    <link rel="stylesheet" href=" Footer-Dark.css">
+    <link rel="stylesheet" href=" swiper.min.css">
+    <link rel="stylesheet" href=" Navigation-Clean.css">
+    <link rel="stylesheet" href=" Simple-Slider.css">
+    <link rel="stylesheet" href=" styles.css">
+    <link rel="stylesheet" href=" leaflet.css">
+    <link rel="stylesheet" href=" carousel.css">
+    <link rel="stylesheet" href=" all.min.css">
+    <link rel="stylesheet" href=" arabic.css">
+    <link rel="icon" type="image/png" href="https://www.onta.dz/assets/img/favicon.png">
+
+
+    <!-- Include Odometer library -->
+    <script src=" odometer0.4.7.min.js.téléchargement"></script>
+    <!-- Include Odometer CSS -->
+    <link rel="stylesheet" href=" odometer-0.4.7-theme-default.css">
+    <style>
+        .countdown {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .countdown-item {
+            margin: 0 10px;
+            font-size: 100px;
+            color: green;
+        }
+
+        .countdown-item .odometer {
+            font-size: 100px;
+            color: green;
+        }
+
+        .countdown-label {
+            font-size: 20px;
+
+            color: black;
+        }
+
+        @media screen and (max-width:600px) {
+            #news_preview {
+                display: none;
+            }
+        }
+
+        .button {
+            min-width: 300px;
+            min-height: 60px;
+            display: inline-flex;
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 1.3px;
+            font-weight: 700;
+            width: auto;
+            color: rgb(255, 255, 255);
+            background: linear-gradient(90deg, rgb(241, 0, 0) 0%, rgb(241, 0, 0) 100%);
+            border: none;
+            border-radius: 1000px;
+            box-shadow: 12px 12px 24px rgba(26, 0, 0);
+            transition: all 0.3s ease-in-out 0s;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            padding: 10px;
+        }
+
+        .button::before {
+            border-radius: 1000px;
+            min-width: calc(100% + 20px);
+            /* mieux que valeur fixe */
+            min-height: calc(100% + 20px);
+            border: 6px solidrgb(0, 255, 21);
+            box-shadow: 0 0 60px rgba(93, 255, 128);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all .3s ease-in-out 0s;
+            z-index: -1;
+            /* pour passer derrière le texte */
+        }
+
+
+        .button:hover,
+        .button:focus {
+            color: rgb(165, 150, 150);
+            transform: translateY(-6px);
+        }
+
+        .button:hover::before,
+        .button:focus::before {
+            opacity: 1;
+        }
+
+        .button::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+            border: 6px solid #FF0000;
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: ring 1s infinite;
+        }
+
+        .button:hover::after,
+        .button:focus::after {
+            animation: none;
+            display: none;
+        }
+
+        @keyframes ring {
+            0% {
+                width: 30px;
+                height: 30px;
+                opacity: 1;
+            }
+
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+    </style>
+    <style>
+        @media screen and (max-width:600px) {
+            #news_preview {
+                display: none;
+            }
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async="" src=" js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECDPZM0CB');
+    </script>
+
+</head>
+
+<!-- The Modal -->
+<body><div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 data-tag="map-onta-title" class="modal-title">شبكة ONTA</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" style="height: 600px">
+                <div id="map" style="width: 100%; height: 100%; position: relative;" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 20; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" role="presentation" src=" lyrs=p&amp;x=32&amp;y=25&amp;z=6" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-137px, -34px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-shadow-pane"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(0px, -37px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(216px, -51px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(69px, 16px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(81px, -4px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-47px, -15px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(148px, -25px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(40px, -21px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(48px, -40px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(231px, 34px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-239px, 242px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-172px, 149px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-197px, 62px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(114px, 692px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(249px, 506px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(106px, 222px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-76px, -10px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(201px, -26px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-507px, 446px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-91px, 128px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(110px, -11px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-166px, 16px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(21px, -43px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-130px, 64px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(225px, -16px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-189px, 39px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(94px, -43px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(242px, -44px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(31px, 193px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-26px, -34px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-76px, 36px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(126px, -46px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-132px, 5px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(176px, 147px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-131px, 34px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-11px, -15px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-54px, 22px, 0px);"><img src=" marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(-192px, 479px, 0px);"></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-marker-pane"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(0px, -37px, 0px); z-index: -37;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(216px, -51px, 0px); z-index: -51;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(69px, 16px, 0px); z-index: 16;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(81px, -4px, 0px); z-index: -4;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-47px, -15px, 0px); z-index: -15;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(148px, -25px, 0px); z-index: -25;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(40px, -21px, 0px); z-index: -21;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(48px, -40px, 0px); z-index: -40;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(231px, 34px, 0px); z-index: 34;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-239px, 242px, 0px); z-index: 242;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-172px, 149px, 0px); z-index: 149;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-197px, 62px, 0px); z-index: 62;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(114px, 692px, 0px); z-index: 692;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(249px, 506px, 0px); z-index: 506;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(106px, 222px, 0px); z-index: 222;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-76px, -10px, 0px); z-index: -10;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(201px, -26px, 0px); z-index: -26;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-507px, 446px, 0px); z-index: 446;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-91px, 128px, 0px); z-index: 128;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(110px, -11px, 0px); z-index: -11;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-166px, 16px, 0px); z-index: 16;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(21px, -43px, 0px); z-index: -43;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-130px, 64px, 0px); z-index: 64;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(225px, -16px, 0px); z-index: -16;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-189px, 39px, 0px); z-index: 39;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(94px, -43px, 0px); z-index: -43;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(242px, -44px, 0px); z-index: -44;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(31px, 193px, 0px); z-index: 193;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-26px, -34px, 0px); z-index: -34;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-76px, 36px, 0px); z-index: 36;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(126px, -46px, 0px); z-index: -46;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-132px, 5px, 0px); z-index: 5;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(176px, 147px, 0px); z-index: 147;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-131px, 34px, 0px); z-index: 34;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-11px, -15px, 0px); z-index: -15;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-54px, 22px, 0px); z-index: 22;"><img src=" marker-icon-onta.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -15px; margin-top: -41px; width: 30px; height: 41px; transform: translate3d(-192px, 479px, 0px); z-index: 479;"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="https://www.onta.dz/#" title="Zoom in" role="button" aria-label="Zoom in">+</a><a class="leaflet-control-zoom-out" href="https://www.onta.dz/#" title="Zoom out" role="button" aria-label="Zoom out">−</a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"></div></div></div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-tag="map-onta-modal-close" data-dismiss="modal">اغلاق</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!--  MODAL A L'AFFICHE  -->
+<div class="modal fade" id="myModal_affiche">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="affiche_titre" class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <center><img id="affiche_image" src="https://www.onta.dz/" style="width: 100%"></center>
+            <div id="affiche_contenu" class="modal-body">
+
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL APPEL A CONSULTATION -->
+<div class="modal fade" id="modal_appel_consultation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body text-center">
+                <i class="fa fa-bullhorn" aria-hidden="true" style="font-size: 64px;color:#1fa055"></i>
+                <br>
+                <br>
+                <h4>اعلانات عن إستشارات جارية</h4>
+                <br>
+                <a href="https://www.onta.dz/appels-consultation-ar" class="btn btn-success">انقر هنا</a>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-tag="map-onta-modal-close" data-dismiss="modal">اغلاق</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal_contact">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 data-tag="home-back-contact" class="modal-title">خلية الاستماع والإرشاد</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body text-right" style="height: 600px;direction:rtl">
+                <div class="container">
+                    <form id="form_contact" class="needs-validation">
+                        <div class="form-group">
+                            <label data-tag="form-contact-prof" for="uprof">أنتم؟</label>
+                            <select class="form-control" name="uprof" data-tag="form-contact-prof-list">
+                                "<option>فلاح</option>
+                                <option>مربي</option>
+                                <option>مستثمر</option>
+                                <option>متعامل اقتصادي</option>
+                                <option>هيئة</option>
+                                <option>باحث/جامعي</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-tag="form-contact-nom" for="uname">اللقب:</label>
+                            <input type="nom" class="validate form-control" id="nom" placeholder="" name="nom" required="">
+                        </div>
+
+                        <div class="form-group">
+                            <label data-tag="form-contact-prenom" for="prenom">الاسم:</label>
+                            <input type="text" class="validate form-control" id="prenom" placeholder="" name="prenom" required="">
+                        </div>
+                        <div class="form-group">
+                            <label data-tag="form-contact-mail" or="email">البريد الإلكتروني:</label>
+                            <input type="email" class="form-control" id="email" placeholder="" name="email">
+
+
+                        </div>
+                        <div class="form-group">
+                            <label data-tag="form-contact-phone" for="email">رقم الهاتف:</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="" name="phone">
+
+
+                        </div>
+                        <div class="form-group">
+                            <label data-tag="form-contact-message" for="message">الرسالة:</label>
+                            <textarea style="height: 75px" class="validate form-control" id="message" placeholder="" name="message" requireds=""></textarea>
+
+
+                        </div>
+
+                        <button data-tag="bouton-envoie" id="send_message" type="submit" class="btn btn-primary">إرسال</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button data-tag="bouton-fermer" type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!--TOAST-->
+<div class="modal fade" id="modal_alert">
+    <div class="modal-dialog modal-dialog-centered" style="justify-content: center;">
+        <div class="modal-content" style="background-color: transparent; width: auto !important; border: 0px !important">
+            <!-- Modal body -->
+            <div class="modal-body" style="height: 100px">
+                <div id="div_alert" class="" role="alert">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div style="height: 150px;background-image: url(&quot;assets/img/onta_header.jpg&quot;);">
+        <div style="height: 150px;background-color: rgba(31,160,85,0.7);">
+            <div class="row" style="margin: 0px;">
+                <div class="col-12 d-flex d-xl-flex justify-content-center align-items-center justify-content-xl-start" style="height: 150px;"><a href="https://www.onta.dz/#"><img class="img-fluid" src=" logo.png"></a></div>
+            </div>
+        </div>
+    </div>
+    <div id="nav_container" style="direction: rtl">
+  <style>
+    .nav-item:hover {
+      color: black;
+      /* This sets the hover color to black */
+    }
+  </style>
+  <nav id="navmain" class="navbar navbar-light navbar-expand-md shadow-sm navigation-clean fixed-top" style="filter: blur(0px); font-size: 16px; z-index: 9; margin-top: 0px;">
+    <div class="container-fluid">
+      <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+        <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navcol-1" style="font-size: 16px">
+        <ul id="nav_container_ul" class="nav navbar-nav text-nowrap ml-auto" style="font-size: 16px">
+          <li class="nav-item" role="">
+            <a data-tag="nav-home" class="nav-link" href="https://www.onta.dz/accueil" aria-expanded="false" style="color: rgb(70, 87, 101);">الصفحة الرئيسية</a>
+          </li>
+          <li class="dropdown nav-item">
+            <a data-tag="nav-presentation" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="https://www.onta.dz/#" style="color: rgb(70, 87, 101);">تقديم المؤسسة</a>
+            <div class="dropdown-menu text-right" role="menu" style="right: 0; left: auto">
+              <a data-tag="nav-som" class="dropdown-item" role="" id="som" href="https://www.onta.dz/presentation-ar">التقديم والتنظيم
+                والمهام</a>
+              <a data-tag="nav-epgpa" class="dropdown-item" role="" id="epgpa" href="https://www.onta.dz/evolution-politique-gestion-patrimoine-agricole-ar">تطور سياسات إدارة حيازات الأراضي الزراعية</a>
+              <a data-tag="nav-iu" class="dropdown-item" role="" id="infos-utiles" href="https://www.onta.dz/informations-utiles-ar">معلومات
+                مفيدة</a>
+            </div>
+          </li>
+          <li class="dropdown nav-item">
+            <a data-tag="nav-eic" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="https://www.onta.dz/#" style="color: rgb(70, 87, 101);">فضاء المستثمرين</a>
+            <div class="dropdown-menu text-right" role="menu" style="right: 0; left: auto">
+              <a data-tag="nav-ca" class="dropdown-item" role="" id="ca" href="https://www.onta.dz/la-concession-agricole-ar">الامتياز
+                الفلاحي</a>
+             <!-- <a data-tag="nav-cneae" class="dropdown-item" role="" id="cneae"
+                href="creation-nouvelles-exploitations-agricoles-elevages-ar">انشاء مستثمرات فلاحيه جديده وتربية
+                الحيوانات</a>-->
+              <a data-tag="nav-apfa" class="dropdown-item" role="" id="apfa" href="https://www.onta.dz/accession-propriete-fonciere-ar">الحصول على ملكيه الاراضي (APFA)</a>
+            </div>
+          </li>
+          <li class="dropdown nav-item">
+            <a data-tag="nav-media" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="https://www.onta.dz/#" style="color: rgb(70, 87, 101);">الإعلانات والاتصالات</a>
+            <div class="dropdown-menu text-right" role="menu" style="right: 0; left: auto">
+              <a class="dropdown-item" href="https://www.onta.dz/revue-de-presse-ar">بيانات صحفية</a>
+              <a class="dropdown-item" href="https://www.onta.dz/appels-candidature-ar">دعوة لتقديم الطلبات</a>
+              <a class="dropdown-item" href="https://www.onta.dz/appels-consultation-ar">إعلان عن إستشارات</a>
+              <a class="dropdown-item" href="https://www.onta.dz/videotheque-ar">وثائق الفيديو</a>
+            </div>
+          </li>
+          <li class="nav-item" role="">
+            <a data-tag="nav-legi_reg" id="legi_reg" class="nav-link" href="https://www.onta.dz/legislation-reglementations-ar">التشريعات
+              والأنظمة</a>
+          </li>
+
+          <li class="nav-item" role="">
+            <a class="nav-link" href="https://www.onta.dz/perimetres-onta-couloir-vert-ar">
+              مشاريع الفلاحية ذات الطابع الاستراتيجي</a>
+          </li>
+        
+     <!-- HTML -->
+      <style>
+/* Afficher le menu dropdown au survol */
+.show-on-hover:hover .dropdown-menu {
+  display: block;
+}
+
+</style>
+<li class="dropdown nav-item show-on-hover">
+  <a data-tag="nav-presentation" class="dropdown-toggle nav-link" href="https://www.onta.dz/formule" id="dropdownFormules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    إستمارات الطلب
+  </a>
+  <div class="dropdown-menu text-right" aria-labelledby="dropdownFormules" style="right: 0; left: auto;">
+    <a class="dropdown-item" href="https://www.onta.dz/#">طلب الترخيص للتنازل عن حق الامتياز لفائدة الغير</a>
+    <a class="dropdown-item" href="https://www.onta.dz/#">بطاقة بيانية للمستثمر صاحب حق الامتياز</a>
+    <a class="dropdown-item" href="https://www.onta.dz/#">بطاقة معلومات المرشح لاقتناء حق الامتياز</a>
+    <a class="dropdown-item" href="https://www.onta.dz/#">بطاقة جرد الأملاك السطحية</a>
+    <a class="dropdown-item" href="https://www.onta.dz/#">استمارة الرد حول ممارسة حق الشفعة</a>
+    <a class="dropdown-item" href="https://www.onta.dz/#">التراجع على ممارسة حق الشفعة</a>
+  </div>
+</li>
+
+
+          <!--
+                    </li>
+                        <li class="nav-item" role="">
+                        <a data-tag="nav-legi_reg" id="legi_reg" class="nav-link"
+                            href="perimetres-onta-ar">دعوة لتقديم الطلبات</a>
+                    </li>
+-->
+          <!--
+                    <li class="nav-item" role="">
+                        <a data-tag="nav-legi_reg" id="candidatur_perim" class="nav-link"
+                            href="appels-candidatures.php">دعوة لتقديم الطلبات</a>
+                    </li>
+-->
+
+          <!-- <li class="dropdown nav-item">
+                        <a  class="dropdown-toggle nav-link" data-toggle="dropdown"
+                            aria-expanded="false" href="#">الطلبات </a>
+                        <div class="dropdown-menu text-right" role="menu" style="right: 0;left:auto;">
+                           <a data-tag="nav-home" class="nav-link" href="suivi-candidature-ar"> متابعة الطلبات</a>
+                        </div>
+                    </li> -->
+
+          <!-- <li class="nav-item" role="">
+                        <a data-tag="nav-contact" class="nav-link" href="#">اتصال</a>
+                    </li> -->
+          <!-- <li class="dropdown nav-item">
+                        <a data-tag="nav-presentation" class="dropdown-toggle nav-link" data-toggle="dropdown"
+                            aria-expanded="false" href="#">تقديم طلب</a>
+                        <div class="dropdown-menu text-right" role="menu" style="right: 0;left:auto;">
+                            <a class="dropdown-item" href="conditions-ar">شروط الايداع</a>
+                            <a class="dropdown-item" href="procedures-ar">الإجراءات</a>
+                            <a class="dropdown-item" href="perimetres-ar">المحيطات</a>
+                        </div>
+                    </li> -->
+          <li class="nav-item" role="">
+            <a data-tag="nav-contact" class="nav-link" href="https://www.onta.dz/accueil-fr">Français</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>    <div class="simple-slider" style="margin-top: 82px;">
+        <div class="swiper-container swiper-container-horizontal">
+            <div class="swiper-wrapper" style="height: 350px; transform: translate3d(-4083px, 0px, 0px); transition-duration: 300ms;"><div id="sw3" class="swiper-slide swiper-slide-duplicate" style="background-image: url(&quot;assets/img/slides/enabled/03.jpg&quot;); height: 100%; width: 1361px;" data-swiper-slide-index="2"></div>
+                <div id="sw1" class="swiper-slide" style="background-image: url(&quot;assets/img/slides/enabled/01.jpg&quot;); height: 100%; width: 1361px;" data-swiper-slide-index="0"></div>
+                <div id="sw2" class="swiper-slide swiper-slide-prev" style="background-image: url(&quot;assets/img/slides/enabled/02.jpg&quot;); height: 100%; width: 1361px;" data-swiper-slide-index="1"></div>
+                <div id="sw3" class="swiper-slide swiper-slide-active" style="background-image: url(&quot;assets/img/slides/enabled/03.jpg&quot;); height: 100%; width: 1361px;" data-swiper-slide-index="2"></div>
+            <div id="sw1" class="swiper-slide swiper-slide-duplicate swiper-slide-next" style="background-image: url(&quot;assets/img/slides/enabled/01.jpg&quot;); height: 100%; width: 1361px;" data-swiper-slide-index="0"></div></div>
+            <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </div>
+    <section id="breaking-news">
+        <div class="container">
+            <div class="sitewidth">
+                <div class="br-title"><span data-tag="info-importantes">معلومات مهمة</span></div>
+                <marquee direction="right">
+                    <ul class=".newsticker-list" style="margin-bottom:10px; width: max-content !important" id="infos_urgentes">
+
+
+                    <li><p style="font-size:14px;font-weight:800;color:red !important">الديوان الوطني للأراضي الفلاحية يهنئكم بحلول السنة الميلادية الجديدة 2026</p></li><li><i class="fa fa-exclamation-circle" style="font-size:20px;color:red"></i></li><li></li><li><p style="font-size:14px;font-weight:800;color:red !important">انطلاق التسجيلات عبر المنصة الرقمية للاستفادة من العقار الفلاحي للاستصلاح في إطار الامتياز بولاية النعامة</p></li><li><i class="fa fa-exclamation-circle" style="font-size:20px;color:red"></i></li><li></li></ul>
+                </marquee>
+                <!-- <ul id="infos_urgentes" style="left: -1500px">
+                               
+                               
+                </ul> -->
+            </div>
+
+        </div>
+
+
+    </section>
+    <br><br>
+    <div class="col-md-12 text-center">
+        <a href="https://app.onta.dz:3010/#/accueil" class="btn ">
+            <strong class=" button"> الإعلان عن الترشح وفقا للقرار 1344، الخاص بالأراضي الفلاحية المتوفرة التابعة للأملاك الخاصة للدولة<br> - ولاية... - </strong>
+        </a>
+    </div>
+    <br><br>
+    <section id="main_section">
+        <div class="container appel_amin" id="alert_appel_panel">
+
+        </div>
+        <section id="section-news" style="margin-top: 0px;">
+            <div class="container">
+                <div class="intro" style="padding-bottom: 50px">
+                    <h2 data-tag="home-actualites" class="text-center" style="color: rgb(49,52,55);font-weight: bold;">الإخبارية</h2>
+                </div>
+                <div class="row" id="news_row">
+                    <div class="col-sm-12 col-md-8 d-xl-flex flex-column" id="news_preview">
+                        <div id="news1-image" class="d-flex d-xl-flex flex-column justify-content-end" style="height: 430px; background-size: cover; background-position: center center; background-image: url(&quot;assets/img/actus/462/SB.jpg&quot;); opacity: 0.599855; display: none;">
+                            <div class="flex-column justify-content-start" style="height: 150px;background-image: linear-gradient(to bottom, #00000000, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4),rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));">
+                                <div>
+                                    <p id="news1-title" style="padding-top: 10px; padding-left: 10px; padding-right: 10px; font-size: 24px; color: rgb(255, 255, 255); filter: blur(0px); font-weight: bold; text-align: right; opacity: 0.183715; display: none;"><a style="color:#fff !important" href="https://www.onta.dz/ar-462-%D9%8A%D8%AF%D9%8A-%D8%A8%D9%84%D8%B9%D8%A8%D8%A7%D8%B3:-%D8%AA%D8%B3%D9%84%D9%8A%D9%85-63-%D9%82%D8%B1%D8%A7%D8%B1-%D8%A7%D8%B3%D8%AA%D8%B5%D9%84%D8%A7%D8%AD-%D9%81%D9%84%D8%A7%D8%AD%D9%8A-%D9%84%D9%81%D8%A7%D9%8A%D8%AF%D8%A9-%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AB%D9%85%D8%B1%D9%8A%D9%86-%D8%A7%D9%84%D9%81%D9%84%D8%A7%D8%AD%D9%8A%D9%86" cle="462"> سيدي بلعباس:  تسليم 63 قرار استصلاح فلاحي لفائدة المستثمرين الفلاحين</a></p>
+                                </div>
+                                <div>
+                                    <p id="news1-contenu" style="direction: rtl; display: none; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; padding-left: 10px; color: rgb(255, 255, 255); text-align: right; opacity: 0.183715;">&nbsp;
+
+تنفيذا لتعليمات السيد رئيس الجمهورية، القاضية بطي ملف
+تطهير العقار الفلاحي بنهاية 2025، وفي إطار وضع حيز التنفيذ للمنشور الوزاري
+المشترك رقم 02 المؤرخ في 01 جوان 2025 المتعلق بتطهير العقار الفلاحي المحول إلى
+مصالح الولاية، وعملا بالمقاربة الاستراتيجية للدولة الجزائرية الرامية إلى تطهير
+العقار الفلاحي، وضمان استغلاله العقلاني والشفاف، ترأس يوم الأربعاء 03 ديسمبر
+2025 ، المدير العام للديوان الوطني للأراضي الفلاحية، السيد لعناصري محمد أمزيان
+بصفته رئيس اللجنة ، اجتماعا للجنة التقنية لترقية الاستثمار الفلاحي ، حضره كل من
+السادة : 
+
+•
+الامين العام للولاية 
+
+•
+المنسق الجهوي للديوان الوطني للأراضي الفلاحية
+
+•
+المفتشة العامة للديوان الوطني الاراضي الفلاحية
+
+•
+مدير المصالح الفلاحية 
+
+•
+مدير مسح الاراضي و الحفظ العقاري
+
+•
+مدير أملاك الدولة 
+
+•
+مدير الري
+
+تمحور جدول الاعمال بالدراسة والمناقشة:
+
+الملفات العالقة للأراضي الممنوحة في ظل الأنظمة السابقة
+على سبيل التسوية لكل من بلديات: برج الامير عبدالقادر،
+&nbsp;ثنية الحد، &nbsp;سيدي بوتوشنت والعيون .
+
+اين تم دراسة و لفصل في 127 ملف وذلك بغية تسريع وتيرة منح
+عقود الامتياز للفلاحين الذين يستغلون الارض استغلالا فعليا.
+
+&nbsp;حيث يندرج هذا في
+اطار المجهودات المبذولة من طرف السلطات الولائية وعلى رأسها والي الولاية السيد
+بوزايد فتحي الذي شدد على ضرورة العمل الفعلي بكل شفافية و نجاعة، وتجنيد جميع
+الفاعلين لحل الاشكاليات والعراقيل التي تعيق سير عملية تطهير العقار الفلاحي
+باعتباره محرك حقيقي للتنمية في البلاد.</p>
+                                </div>
+                                <div style="position: absolute; top: 10px">
+                                    <p style="padding-right: 10px;padding-left: 10px;color: rgb(255,255,255); font-size: 1.2em" id="news1-lecture"><i class="fa fa-eye">   118</i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <div class="row" style="padding: 0px;padding-left: 15px;">
+                            <div id="news_hover" class="col-12" style="height: 100px; position: absolute; top: 63.8703px;">
+
+                            </div>
+                            <div index="1" class="col-12 news_tab" style="height: 100px; box-shadow: 0px 0px 2px 0px #dadada;">
+                                <div class="row" style="height: 100px;">
+                                    <div id="news1_tab_img" class="col-4 news_tab_img" style="height: 100px; background-size: cover; background-image: url(&quot;assets/img/actus/463/thumbnail_tisse.jpg&quot;);"></div>
+                                    <div class="col-8 d-flex flex-column justify-content-between">
+                                        <div class="news_tab_title" id="news1_tab_title" style="height: 80px;overflow: hidden;" rubrique="Réunion" cle="463" nb_lecture="623" lang="ar"><p style="font-size:17px; text-align: right">تيسمسيلت: المدير العام للديوان يشرف على اجتماع اللجنة التقنية لترقية الاستثمار الفلاحي..</p></div>
+                                        <div class="d-flex" style="height: 20px;"><i class="fa fa-clock-o" style="font-size: 20px;"></i>
+                                            <p id="news1_tab_date" style="color: #929292;font-size: 14px;">&nbsp; الثلاثاء 09/12/2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col" style="height: 10px;"></div>
+                            <div index="2" class="col-12 news_tab news_tab_active" style="height: 100px;box-shadow: 0px 0px 2px 0px #dadada;">
+                                <div class="row" style="height: 100px;">
+                                    <div id="news2_tab_img" class="col-4 news_tab_img" style="height: 100px; background-size: cover; background-image: url(&quot;assets/img/actus/462/thumbnail_SB.jpg&quot;);"></div>
+                                    <div class="col-8 d-flex flex-column justify-content-between">
+                                        <div class="news_tab_title" id="news2_tab_title" style="height: 80px;overflow: hidden;" rubrique="Événement" cle="462" nb_lecture="118" lang="ar"><p style="font-size:17px; text-align: right"> سيدي بلعباس:  تسليم 63 قرار استصلاح فلاحي لفائدة المستثمرين الفلاحين</p></div>
+                                        <div class="d-flex" style="height: 20px;"><i class="fa fa-clock-o" style="font-size: 20px;"></i>
+                                            <p id="news2_tab_date" style="color: #929292;font-size: 14px;">&nbsp; الاثنين 08/12/2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col" style="height: 10px;"></div>
+                            <div index="3" class="col-12 news_tab" style="height: 100px;box-shadow: 0px 0px 2px 0px #dadada;">
+                                <div class="row" style="height: 100px;">
+                                    <div id="news3_tab_img" class="col-4 news_tab_img" style="height: 100px; background-size: cover; background-image: url(&quot;assets/img/actus/461/461-thumb--le-dg-de-l-onta-presente-le-bilan-des-principaux-dossiers-du-foncier-agricole-devant-la-commission-de-l-agriculture--de-la-peche-et-de-la-protection-de-l-environnement-a-l-assemblee-populaire-nationale.jpg&quot;);"></div>
+                                    <div class="col-8 d-flex flex-column justify-content-between">
+                                        <div class="news_tab_title" id="news3_tab_title" style="height: 80px;overflow: hidden;" rubrique="Réunion" cle="461" nb_lecture="25" lang="ar"><p style="font-size:17px; text-align: right">المدير العام للديوان الوطني للأراضي الفلاحية يعرض حصيلة لأهم وأبرز ملفات العقار الفلاحي أمام لجنة الفلاحة والصيد البحري وحماية البيئة بالمجلس الشعبي الوطني</p></div>
+                                        <div class="d-flex" style="height: 20px;"><i class="fa fa-clock-o" style="font-size: 20px;"></i>
+                                            <p id="news3_tab_date" style="color: #929292;font-size: 14px;">&nbsp;  08/12/2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col" style="height: 10px;"></div>
+                            <div index="4" class="col-12 news_tab" style="height: 100px;box-shadow: 0px 0px 2px 0px #dadada;">
+                                <div class="row" style="height: 100px;">
+                                    <div id="news4_tab_img" class="col-4 news_tab_img" style="height: 100px;background-size: cover;"></div>
+                                    <div class="col-8 d-flex flex-column justify-content-between">
+                                        <div class="news_tab_title" id="news4_tab_title" style="height: 80px;overflow: hidden;" rubrique="Réunion" cle="460" nb_lecture="293" lang="ar"><p style="font-size:17px; text-align: right">عنابة: اللجنة التقنية لترقية الاستثمار الفلاحي تشرع في دراسة الملفات العالقة ضمن مختلف الصيغ السابقة للاستصلاح في إطار الامتياز</p></div>
+                                        <div class="d-flex" style="height: 20px;"><i class="fa fa-clock-o" style="font-size: 20px;"></i>
+                                            <p id="news4_tab_date" style="color: #929292;font-size: 14px;">&nbsp; االخميس 20/11/2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="plusActus" class="col-md-12" style="text-align: center;margin-top: 10px">
+                        <a href="https://www.onta.dz/news-ar"><button class="btn btn-primary text-uppercase bg-success border rounded-0" id="" type="button" data-tag="lire_act"><i class="fa fa-eye"></i>اقرأ جميع الأخبار</button></a>
+                    </div>
+                </div>
+            </div>
+            <style>
+                @font-face {
+                    font-family: 'Scheherazade';
+                    src: url('./Scheherazade_New/ScheherazadeNew-Regular.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+
+                body {
+                    font-family: 'Scheherazade', serif;
+                    /* Use the custom font */
+                }
+
+                .uploadcondidature {
+                    font-size: 40px;
+                    margin-bottom: 25px;
+                }
+
+                /* Style for the countdown text */
+                .countdown-table {
+                    font-family: 'Scheherazade', serif;
+                    /* Use the custom font */
+                    font-size: 40px;
+                    /* Adjust the font size as needed */
+                    font-weight: bold;
+                    /* Make the text bold */
+                    color: #008000;
+                    /* Set the text color to green */
+                    text-shadow: 1px 1px 2px #7f7f7f;
+                    /* Add a subtle text shadow for better visibility */
+                }
+
+                .countdown-table table {
+                    width: 100%;
+                }
+
+                .countdown-table table td {
+                    text-align: center;
+                    padding: 1px;
+                    /* Adjust the padding as needed */
+                }
+
+                .countdown-table table td.value {
+                    font-size: 28px;
+                    /* Adjust the font size for the numbers */
+                    padding: 1px;
+                    /* Adjust the padding as needed */
+
+
+                }
+
+                .countdown-table table td.colon {
+                    font-size: 28px;
+                    /* Adjust the font size for colons */
+                    padding: 1px;
+                    /* Adjust the padding as needed */
+                }
+
+                .countdown-table table td.label {
+                    font-size: 16px;
+                    /* Adjust the font size for labels */
+                    padding: 1px;
+                    /* Adjust the padding as needed */
+                }
+            </style>
+            
+
+            
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a href="https://onta.dz/perimetres-onta-432-ar" class="btn btn-danger uploadcondidature btn-lg">
+                                <strong> شروط إيداع ملف الترشح</strong>
+
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <a href="https://onta.dz/perimetres-ar" class="btn btn-danger uploadcondidature btn-lg hide-appel countdown">
+                                <strong>أقدم طلبي</strong>
+                                <i class="fa-solid fa-file-arrow-up fa-lg" style="color: #ffffff;"></i>
+                            </a>
+                        </div>
+
+                        <div class="col-md-6 text-center">
+                            <a href="https://onta.dz/suivi-candidature-ar" class="btn btn-success uploadcondidature btn-lg">
+                                <strong> تتبع طلبي</strong>
+                                <i class="fa-solid fa-edit fa-lg" style="color: #ffffff;"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="countdown-table hide-appel">
+                                <!-- <table>
+						<tr>
+							<td class="value" id="days">00</td>
+							<td class="colon">:</td>
+							<td class="value" id="hours">00</td>
+							<td class="colon">:</td>
+							<td class="value" id="minutes">00</td>
+							<td class="colon">:</td>
+							<td class="value" id="seconds">00</td>
+						</tr>
+						<tr>
+							<td class="label">يوم</td>
+							<td class="label"></td>
+							<td class ="label">ساعة</td>
+							<td class="label"></td>
+							<td class="label">دقيقة</td>
+							<td class="label"></td>
+							<td class="label">ثانية</td>
+						</tr>
+					</table> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add jQuery CDN -->
+                <script src=" jquery-3.6.0.min.js.téléchargement"></script>
+
+                <div dir="rtl" class="countdown">
+                    <div class="countdown-item">
+                        <div class="seconds odometer odometer-auto-theme                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    odometer-animating-down" dir="ltr"><div class="odometer-inside"><span class="odometer-digit"><span class="odometer-digit-spacer">8</span><span class="odometer-digit-inner"><span class="odometer-ribbon"><span class="odometer-ribbon-inner"><div class="odometer-value odometer-last-value odometer-first-value">2</div></span></span></span></span><span class="odometer-digit"><span class="odometer-digit-spacer">8</span><span class="odometer-digit-inner"><span class="odometer-ribbon"><span class="odometer-ribbon-inner"><div class="odometer-value odometer-first-value">4</div><div class="odometer-value odometer-last-value">5</div></span></span></span></span></div></div> <!-- Force LTR direction for numbers -->
+                        <div class="countdown-label">ثواني</div>
+                    </div>
+                    <div class="countdown-item">:
+                        <div class="minutes odometer odometer-auto-theme" dir="ltr"><div class="odometer-inside"><span class="odometer-digit"><span class="odometer-digit-spacer">8</span><span class="odometer-digit-inner"><span class="odometer-ribbon"><span class="odometer-ribbon-inner"><span class="odometer-value">3</span></span></span></span></span><span class="odometer-digit"><span class="odometer-digit-spacer">8</span><span class="odometer-digit-inner"><span class="odometer-ribbon"><span class="odometer-ribbon-inner"><span class="odometer-value">8</span></span></span></span></span></div></div> <!-- Force LTR direction for numbers -->
+                        <div class="countdown-label">دقائق</div>
+                    </div>
+                    <div class="countdown-item">:
+                        <div class="hours odometer odometer-auto-theme" dir="ltr"><div class="odometer-inside"><span class="odometer-digit"><span class="odometer-digit-spacer">8</span><span class="odometer-digit-inner"><span class="odometer-ribbon"><span class="odometer-ribbon-inner"><span class="odometer-value">2</span></span></span></span></span></div></div> <!-- Force LTR direction for numbers -->
+                        <div class="countdown-label">ساعات</div>
+                    </div>
+                    <div class="countdown-item">:
+                        <div class="days odometer odometer-auto-theme" dir="ltr"><div class="odometer-inside"><span class="odometer-digit"><span class="odometer-digit-spacer">8</span><span class="odometer-digit-inner"><span class="odometer-ribbon"><span class="odometer-ribbon-inner"><span class="odometer-value">6</span></span></span></span></span></div></div> <!-- Force LTR direction for numbers -->
+                        <div class="countdown-label">أيام</div>
+                    </div>
+                </div>
+                
+                <script>
+                    $(document).ready(function() {
+                        // $('.countdown').hide(); // Hides the countdown element
+                        function updateOdometer(serverTime) {
+                            // Parse the target date and time from PHP (ensure PHP date format is correct)
+                            var targetDate = new Date("2026-01-11T23:59:00");
+
+                            // Check if the server time has passed the target date
+                            if (serverTime >= targetDate) {
+                                // $('.countdown').hide(); // Hide the countdown if the target time is reached
+                                return;
+                            }
+
+                            // Calculate the remaining time
+                            var timeRemaining = targetDate - serverTime;
+                            if (timeRemaining < 0) {
+                                timeRemaining = 0;
+                            }
+
+                            // Calculate days, hours, minutes, and seconds
+                            var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                            days -= 1;
+                            if (days < 0) {
+                                return;
+                            }
+                            // Si le reste du temps est supérieur à 12 heures, on considère un jour supplémentaire.
+                            // if (timeRemaining % (1000 * 60 * 60 * 24) >= (1000 * 60 * 60 * 12)) {
+                            //days += 1;
+                            //}
+                            var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                            var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+
+                            console.log(days)
+                            // If exactly 1 day is left, display it as 0 days----------------------------------------------------------------------
+                            //if (days === 1) {
+                            //     days = 0;
+                            //    console.log("days afer")
+                            //}
+
+                            // Update the HTML with the countdown values
+                            $(".days").html(days + " days");
+                            $(".hours").html(hours + " hours");
+                            $(".minutes").html(minutes + " minutes");
+                            $(".seconds").html(seconds + " seconds");
+                        }
+
+                        function fetchServerTime() {
+                            $.ajax({
+                                url: "https://onta.dz/dz-hours.php",
+                                type: "GET",
+                                success: function(data) {
+                                    var serverTime = new Date(data.datetime).getTime();
+                                    updateOdometer(serverTime); // Update odometer with initial server time
+
+                                    // Update every second
+                                    setInterval(function() {
+                                        serverTime += 1000; // Increment server time by 1 second
+                                        updateOdometer(serverTime);
+                                    }, 1000);
+                                },
+                            });
+                        }
+
+                        fetchServerTime(); // Fetch server time immediately
+                    });
+                </script>
+
+                <br><br>
+
+
+                <br>
+                <br>
+                <!--<div class="row">
+    <div class="col-md-12 text-center">
+        <h2  style="font-weight: bolder;">فيديو توضيحي لكيفية ايداع ملف الترشح عبر المنصة الرقمية</h2>
+        <br>
+<br>
+    </div>-->
+                <div class="col-md-12 text-center">
+                    <iframe width="50%" height="500" src=" x49F04kPB3I.html" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+                </div>
+                
+                <br>
+                <br>
+                <!--
+<div class="row">
+			<div class="col-md-12 text-center">
+				<a href="https://onta.dz/candidats-retenu" class="btn btn-danger uploadcondidature btn-lg">
+					<strong>القائمة الاسمية للمترشحين المقبولين نهائيا</strong>
+					
+                </a>
+			</div> -->
+                <br>
+                <br>
+                <br>
+                <br>
+
+
+        </section>
+    </section>
+    <!--main section-->
+    <section style="margin-top: 100px;" id="cards">
+        <div class="container">
+            <div class="row">
+                <!--REVUE DE PRESSE-->
+                <div class="col-sm-12 col-md-2">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;"><i class="fa fa-newspaper-o d-xl-flex" style="color: rgb(255,255,255);font-size: 75px;"></i>
+                                    <p data-tag="home-front-presse" style="color: rgb(255,255,255);font-size: 18px;">
+                                        بيانات صحفية</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;">
+                                    <i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/journaux.jpg&quot;);background-repeat: no-repeat;background-size: auto;">
+                                <div class="d-flex justify-content-xl-center align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-presse" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">بيانات صحفية</h5>
+                                        <div class="d-xl-flex justify-content-xl-center"><a href="https://www.onta.dz/revue-de-presse-ar" class="btn btn-primary" type="button" style="background-color: #0c7123;color: rgb(255,255,255);" data-tag="home-back-click">انقر هنا</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--PUBLICATION-->
+                <div class="col-sm-12 col-md-2" style="height: 100%;">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;"><i class="fa fa-desktop" style="color: rgb(255, 255, 255); font-size: 75px;"></i>
+                                    <p data-tag="home-front-publication" style="color: rgb(255,255,255);font-size: 18px;">المنصة الرقمية</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;"><i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/best-books-2015-8c5b457cbb33d68c25a146f0ab55fc654bb40264-s800-c85.jpg&quot;);background-repeat: no-repeat;background-size: cover;">
+                                <div class="d-xl-flex justify-content-xl-center d-flex align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-publication" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">المنصة الرقمية</h5>
+                                        <div class="d-xl-flex justify-content-xl-center"><a class="btn btn-primary" type="button" href="https://www.onta.dz/publications-ar" style="background-color: #0c7123;color: rgb(255,255,255);" data-tag="home-back-click">انقر هنا</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--RESEAU ONTA-->
+                <div class="col-sm-12 col-md-2 d-xl-flex">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;"><i class="material-icons d-xl-flex" style="color: rgb(255,255,255);font-size: 75px;">location_on</i>
+                                    <p data-tag="home-front-reseau" style="color: rgb(255,255,255);font-size: 18px;">
+                                        شبكة ONTA</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;"><i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/Algerie-geo.png&quot;);background-size: contain;background-repeat: no-repeat;background-position: center;">
+                                <div class="d-xl-flex justify-content-xl-center d-flex align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-reseau" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">شبكة ONTA</h5>
+                                        <div class="d-xl-flex justify-content-xl-center"><button class="btn btn-primary" type="button" style="background-color: #0c7123;color: rgb(255,255,255);" data-toggle="modal" data-target="#myModal" data-tag="home-back-click">انقر هنا</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--CELLULE D'ECOUTE-->
+                <div class="col-sm-12 col-md-2">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;padding-left: 5px; padding-right: 5px">
+                                    <i class="material-icons d-xl-flex" style="color: rgb(255,255,255);font-size: 75px;">question_answer</i>
+                                    <p data-tag="home-front-contact" style="color: rgb(255,255,255);font-size: 18px;text-align: center">خلية الاستماع والإرشاد</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;"><i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/hukuka-uygun-e-posta_mn3wvy.jpg&quot;);background-repeat: no-repeat;background-size: cover;">
+                                <div class="d-xl-flex justify-content-xl-center d-flex align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-contact" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">خلية الاستماع والإرشاد</h5>
+                                        <div class="d-xl-flex justify-content-xl-center"><button data-toggle="modal" data-target="#myModal_contact" class="btn btn-primary" type="button" style="background-color: #0c7123;color: rgb(255,255,255);" data-tag="home-back-click">انقر هنا</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--APPEL A CONSULTATION-->
+                <div class="col-sm-12 col-md-2">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;">
+                                    <i class="fa fa-handshake-o" aria-hidden="true" style="color: white;font-size: 75px"></i>
+                                    <p data-tag="home-front-appel" style="color: rgb(255,255,255);font-size: 18px;text-align: center">دعوة للمناقصات</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;"><i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/appel_consultation.jpg&quot;);background-repeat: no-repeat;background-size: cover;">
+                                <div class="d-xl-flex justify-content-xl-center d-flex align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-appel" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">دعوة للمناقصات</h5>
+                                        <div class="d-xl-flex justify-content-xl-center">
+                                            <a href="https://www.onta.dz/appels-consultation-ar" class="btn btn-primary" type="button" style="background-color: #0c7123;color: rgb(255,255,255);" data-tag="home-back-click">انقر هنا</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--APPEL A CANDIDATURE-->
+                <div class="col-sm-12 col-md-2">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;">
+                                    <i class="fa fa-bullhorn" aria-hidden="true" style="color: white;font-size: 75px"></i>
+                                    <p data-tag="home-front-appel-cand" style="color: rgb(255,255,255);font-size: 18px;text-align: center">دعوة لتقديم الطلبات</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;"><i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/appel_consultation.jpg&quot;);background-repeat: no-repeat;background-size: cover;">
+                                <div class="d-xl-flex justify-content-xl-center d-flex align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-appel-cand" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">دعوة لتقديم الطلبات</h5>
+                                        <div class="d-xl-flex justify-content-xl-center">
+
+                                            <a class="btn btn-primary" type="button" style="background-color: #0c7123;color: rgb(255,255,255);" data-tag="home-back-click" href="https://onta.dz/perimetres-onta-ar">انقر هنا </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--
+                  <div class="col-sm-12 col-md-2">
+                    <div class="card-container-imagia">
+                        <div class="card-imagia">
+                            <div class="front-imagia">
+                                <div class="d-flex d-xl-flex flex-column justify-content-center align-items-center justify-content-xl-center align-items-xl-center cover-imagia cover-gradient" style="height: 213px;">
+                                    <i class="fa fa-bullhorn" aria-hidden="true" style="color: white;font-size: 75px"></i>
+                                    <p data-tag="home-front-appel-cand" style="color: rgb(255,255,255);font-size: 18px;text-align: center">دعوة لتقديم الطلبات</p>
+                                </div>
+                                <div class="footer-imagia w-100 text-secondary position-absolute text-center py-2" style="font-size: 14px;"><i class="fa fa-plus"></i> أكثر معلومات
+                                </div>
+                            </div>
+                            <div class="back-imagia" style="background-image: url(&quot;assets/img/appel_consultation.jpg&quot;);background-repeat: no-repeat;background-size: cover;">
+                                <div class="d-xl-flex justify-content-xl-center d-flex align-items-center h-100 px-3">
+                                    <div>
+                                        <h5 data-tag="home-back-appel-cand" class="text-center" style="color: rgb(255,255,255);text-shadow: 1px 1px 5px black;">دعوة لتقديم الطلبات</h5>
+                                        <div class="d-xl-flex justify-content-xl-center">
+                                            <a href=" https://onta.dz/ar/appels-candidatures.php" class="btn btn-primary" type="button" style="background-color: #0c7123;color: rgb(255,255,255);">انقر هنا</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+-->
+
+
+
+
+
+
+
+            </div>
+
+
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 
+    <section style="margin-top: 100px;" >
+     <div  class="col-md-12" style="text-align: center;margin-top: 10px">
+            <a id="afficher"><button class="btn btn-primary text-uppercase bg-success border rounded-0"  type="button" ><i class="fa fa-eye"></i> Comment ça se passe ? </button></a>
+        </div>
+    </section> -->
+    <div class="footer-dark">
+            </div>
+
+    <script src=" jquery.min.js.téléchargement"></script>
+    <script src=" bootstrap.min.js.téléchargement"></script>
+    <script src=" BreakingNews.js.téléchargement"></script>
+    <!-- <script src="assets/js/BreakingNewss.js"></script> -->
+    <script src=" swiper.jquery.min.js.téléchargement"></script>
+    <script src=" Simple-Slider.js.téléchargement"></script>
+    <script src=" onta.js.téléchargement"></script>
+    <script src=" leaflet.js.téléchargement"></script>
+    <script src=" map.js.téléchargement"></script>
+    <script src=" translate.js.téléchargement"></script>
+    <script src=" slide.accueil.js.téléchargement"></script>
+    <script src=" infos.urgentes.js.téléchargement"></script>
+    <script src=" alert.appels.consultation.js.téléchargement"></script>
+    <script src=" actu.listing.js.téléchargement"></script>
+    <script src=" afficher.js.téléchargement"></script>
+    <script>
+
+    </script>
+
+
+</body></html>

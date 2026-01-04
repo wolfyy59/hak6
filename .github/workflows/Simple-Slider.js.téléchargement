@@ -1,0 +1,47 @@
+$(function(){
+
+    // Initializing the swiper plugin for the slider.
+    // Read more here: http://idangero.us/swiper/api/
+
+    var mySwiper = new Swiper ('.swiper-container', {
+        loop: true,
+        direction: 'horizontal',
+        autoplay:3000,
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev'
+    });
+
+    //navlang
+    var navTop = 180;
+
+    var stickyNav = function(){
+
+        if ($(window).scrollTop() >= navTop)
+        {
+            $("#navlang").addClass("fixed-top");
+            $("#navmain").addClass("fixed-top");
+            
+            $(".simple-slider").css("margin-top","82px");            
+        } 
+
+        else 
+
+        {
+            $("#navlang").removeClass("fixed-top");
+            $("#navmain").removeClass("fixed-top");
+            $(".simple-slider").css("margin-top","10px"); 
+            $("#navmain").css("margin-top","0px");
+        }
+    };
+
+
+
+    $(window).scroll(function(){
+        stickyNav();
+    });
+
+
+
+});

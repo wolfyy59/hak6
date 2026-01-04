@@ -1,0 +1,274 @@
+
+function removeDiacritics(input) {
+    var output = "";
+
+    var normalized = input.normalize("NFD");
+    var i = 0;
+    var j = 0;
+
+    while (i < input.length) {
+        output += normalized[j];
+
+        j += (input[i] == normalized[j]) ? 1 : 2;
+        i++;
+    }
+
+    return output;
+}
+
+
+
+actu_listing();
+animateNews();
+
+var myAction;
+var lang;
+
+function animateNews() {
+    //ANIMATE NEWS
+    //Intérompre le défilement
+    var pause = false;
+    $('#news_row').on('mouseover', function () {
+        pause = true;
+    });
+    $('#news_row').on('mouseout', function () {
+        pause = false;
+    });
+
+    myAction = setInterval(function () {
+
+        if (pause == false) {
+            var index = $('.news_tab_active').attr('index');
+            var indexInt = parseInt(index);
+            if (indexInt == 4) {
+                nextIndex = 1;
+                $("[index='" + nextIndex + "']").trigger('click');
+            }
+            else {
+                var nextIndex = indexInt + 1;
+                $("[index='" + nextIndex + "']").trigger('click');
+            }
+        }
+    }, 3000);
+}//fin animateNews
+
+function stopAnimateNews() {
+    clearInterval(myAction);
+}
+
+function actu_listing() {
+    //*****************************
+    //LISTE Actualités (news-title)
+    //*****************************
+
+    //LISTING ACTUALITES   
+    $.ajax({
+        url: 'assets/php/actu.listing.php',
+        type: 'POST',
+        async: false,
+        success: function (reponse) {
+
+            var data = JSON.parse(reponse);
+            lang = data['lang'];
+            var data = data['output'];
+            var nbr_actu = data.length;
+
+            contenu = [];
+            contenu_ar = [];
+            for (i = 1; i <= nbr_actu; i++) {
+                var titre = data[i - 1]['titre'];
+                var titre_ar = data[i - 1]['titre_ar'];
+                var image_path = data[i - 1]['image_id'];
+                var thumb_path = data[i - 1]['thumb_path'];
+                var contenu_temp = data[i - 1]['contenu'];
+                //contenu[i] = contenu_temp.substring(0, 200);
+                contenu[i] = data[i - 1]['contenu'];
+                var contenu_temp_ar = data[i - 1]['contenu_ar'];
+                //contenu_ar[i] = contenu_temp_ar.substring(0, 200);
+                contenu_ar[i] = data[i - 1]['contenu_ar'];
+                var rubrique = data[i - 1]['rubrique'];
+                var cle = data[i - 1]['cle'];
+                var date = data[i - 1]['date'];
+                var date = date.split('-');
+                var date = date['2'] + '/' + date['1'] + '/' + date['0'];
+                var jour = data[i - 1]['jour'];
+                var jour_ar = data[i - 1]['jour_ar'];
+                var nb_lecture = data[i - 1]['nb_lecture'];
+
+                switch (lang) {
+                    case 'fr':
+                        $('#news' + i + '_tab_title').html('<p style="font-size:17px;">' + titre + '</p>')
+                        $('#news' + i + '_tab_date').html('&nbsp; ' + jour + ' ' + date);
+                        break;
+                    case 'ar':
+                        $('#news' + i + '_tab_title').html('<p style="font-size:17px; text-align: right">' + titre_ar + '</p>')
+                        $('#news' + i + '_tab_date').html('&nbsp; ' + jour_ar + ' ' + date);
+                        break;
+                }
+                $('#news' + i + '_tab_title').attr({ 'rubrique': rubrique, 'cle': cle, 'nb_lecture': nb_lecture, 'lang': lang });
+                $('#news' + i + '_tab_img').css('background-image', 'url(' + thumb_path + ')');
+                $('#news' + i + '_tab_img').data('image_path', image_path);
+
+            }
+
+
+
+            //first news
+            var titre = $('#news1_tab_title').text();
+            var cle = $('#news1_tab_title').attr('cle');
+            var nb_lecture = $('#news1_tab_title').attr('nb_lecture');
+            var lang = $('#news1_tab_title').attr('lang');
+            var titreURL = removeDiacritics(titre);
+            var titreURL = titreURL.trim();
+            var titreURL = titreURL.replace(/[^a-zA-Z0-9 -]/, "");
+            var titreURL = titreURL.replace(/\s/g, "-");
+            var titreURL = titreURL.replace("--", "-");
+            var titreURL = titreURL.replace("’", "");
+            var titreURL = titreURL.toLowerCase();
+
+            //titre
+            switch (lang) {
+                case 'fr':
+                    $('#news1-title').css('text-align', 'left')
+                    $('#news1-contenu').css('text-align', 'left')
+                    $('#news1-contenu').html(contenu[1]);
+                    break;
+                case 'ar':
+                    $('#news1-title').css('text-align', 'right')
+                    $('#news1-contenu').css('text-align', 'right')
+                    $('#news1-contenu').html(contenu_ar[1]);
+                    break;
+            }
+            $('#news1-title').html('<a style="color:#fff !important" href="' + lang + '-' + cle + '-' + titreURL + '" cle="' + cle + '" >' + titre + '</a>');
+
+            //CONTENUE
+
+            var contenuText = $('#news1-contenu').text();
+            $('#news1-contenu').text(contenuText);
+            //image
+            var image_path = $('#news1_tab_img').data('image_path');
+
+            $('#news1-image').css('background-image', ' url(' + image_path + ')');
+
+
+            //categorie
+            $('.post-cata').text($('#news1_tab_title').attr('rubrique'));
+            $('#news_badge_link').attr('href', 'recherche.php?rubrique=' + $('#news1_tab_title').attr('rubrique'));
+            //nb lecture
+            $('#news1-lecture').html('<i class="fa fa-eye">   ' + nb_lecture + '</i>')
+        }
+    });//Fin listing actualités
+
+}//fin fonction actuListing()
+////////////////////////////////////////
+//CLICK NEWS TAB  
+////////////////////////////////////////
+
+$(".news_tab").click(function () {
+
+    $('.news_tab').removeClass("news_tab_active");
+    $(this).addClass("news_tab_active");
+    if (!document.hidden) {
+        var index = $(this).attr("index");
+        var indexInt = parseInt(index);
+        top_animation = (indexInt * 110) - 110;
+        top_animation = top_animation + 'px';
+        $("#news_hover").animate({ top: top_animation });
+    }
+
+    var titre = $('.news_tab_title', $(this)).text();
+    var rubrique = $('.news_tab_title', $(this)).attr('rubrique');
+    var cle = $('.news_tab_title', $(this)).attr('cle');
+    var nb_lecture = $('.news_tab_title', $(this)).attr('nb_lecture');
+    var lang = $('.news_tab_title', $(this)).attr('lang');
+    var contenuText = contenu[indexInt];
+
+    var titreURL = removeDiacritics(titre);
+    var titreURL = titreURL.trim();
+    var titreURL = titreURL.replace(/[^a-zA-Z0-9 -]/, "");
+    var titreURL = titreURL.replace(/\s/g, "-");
+    var titreURL = titreURL.replace("--", "-");
+    var titreURL = titreURL.replace("’", "");
+    var titreURL = titreURL.toLowerCase();
+    //titre
+    switch (lang) {
+        case 'fr':
+            $('#news1-title').css('text-align', 'left')
+            $('#news1-contenu').css('text-align', 'left')
+            $('#news1-contenu').html(contenu[indexInt]);
+            break;
+        case 'ar':
+            $('#news1-title').css('text-align', 'right')
+            $('#news1-contenu').css('text-align', 'right')
+            $('#news1-contenu').html(contenu_ar[indexInt]);
+            break;
+    }
+
+    $('#news1-title').html('<a style="color:#fff !important" href="' + lang + '-' + cle + '-' + titreURL + '" cle="' + cle + '">' + titre + '</a>').hide().fadeIn(1000);
+
+    //image
+    var image_path = $('.news_tab_img', $(this)).data('image_path');
+
+    $('#news1-image').css('background-image', 'url(' + image_path + ')').hide().fadeIn(500);
+
+    $('.post-cata').text(rubrique);
+    $('#news_badge_link').attr('href', 'recherche.php?rubrique=' + rubrique);
+    //nb lecture
+    $('#news1-lecture').html('<i class="fa fa-eye">   ' + nb_lecture + '</i>').fadeIn(500);
+    var i = $(this).attr('index');
+    //CONTENU
+    switch (lang) {
+        case 'fr':
+            var contenuText = $('#news1-contenu').text();
+            break;
+        case 'ar':
+            var contenuText = $('#news1-contenu').text();
+            break;
+    }
+
+    $('#news1-contenu').text(contenuText).hide().fadeIn(1000);
+});//fin click news tab
+
+
+
+
+
+array = [];
+//à l'affiche
+$.ajax({
+    url: 'assets/php/affiche.php',
+    type: 'POST',
+    async: false,
+    success: function (reponse) {
+        var data = JSON.parse(reponse);
+        var nbr_affiche = data.length;
+        for (i = 0; i < nbr_affiche; i++) {
+            array.push(data[i]);
+        }
+        if (nbr_affiche <= 3 && nbr_affiche > 0) {
+            for (i = 1; i <= nbr_affiche; i++) {
+                $('#carousel_affiche').append('<div class="col-sm-4"><div class="thumb-wrapper"><div class="img-box"><img src="assets/img/alaune/' + data[i - 1]['image_id'] + '" class="img-responsive img-fluid" alt=""></div><div class="thumb-content"><h6>' + data[i - 1]['titre'] + '</h6><a href="#" class=" btn_read_affiche btn btn-primary" cle="' + (i - 1) + '">Lire + <i class="fa fa-angle-right"></i></a></div></div></div>');
+            }
+        }
+        else if (nbr_affiche > 3) {
+            for (i = 1; i <= 3; i++) {
+                $('#carousel_affiche').append('<div class="col-sm-4"><div class="thumb-wrapper"><div class="img-box"><img src="assets/img/alaune/' + data[i - 1]['image_id'] + '" class="img-responsive img-fluid" alt=""></div><div class="thumb-content"><h6>' + data[i - 1]['titre'] + '</h6><a href="#" class="btn_read_affiche btn btn-primary" cle="' + (i - 1) + '">Lire + <i class="fa fa-angle-right"></i></a></div></div></div>');
+            }
+            for (i = 4; i <= nbr_affiche; i++) {
+                $('#carousel_affiche_2').append('<div class="col-sm-4"><div class="thumb-wrapper"><div class="img-box"><img src="assets/img/alaune/' + data[i - 1]['image_id'] + '" class="img-responsive img-fluid" alt=""></div><div class="thumb-content"><h6>' + data[i - 1]['titre'] + '</h6><a href="#" class="btn_read_affiche btn btn-primary" cle="' + (i - 1) + '">Lire + <i class="fa fa-angle-right"></i></a></div></div></div>');
+            }
+        }
+    }
+});// ajax end
+
+
+//READ AFFICHE
+
+$(document).on('click', ".btn_read_affiche", function (e) {
+    e.preventDefault();
+    var cle = $(this).attr('cle');
+    $('#affiche_titre').text(array[cle]['titre']);
+    $('#affiche_contenu').text(array[cle]['contenu']);
+    $('#affiche_image').attr('src', 'assets/img/alaune/' + array[cle]['image_id']);
+    $('#myModal_affiche').modal('show');
+});

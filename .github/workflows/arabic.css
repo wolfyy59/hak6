@@ -1,0 +1,11 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;500&display=swap');
+
+body {
+    font-family: 'Scheherazade New', sans-serif !important;
+} */
+
+@media screen and (max-width:600px) {
+    #news_preview{
+        display: none;
+    }
+}

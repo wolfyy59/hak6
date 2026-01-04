@@ -1,0 +1,98 @@
+.card-header {
+    border-bottom: 0px !important;
+    /* border-top: 1px solid rgba(0,0,0,.125) !important; */
+}
+
+.news_tab:hover {
+  
+    cursor: pointer;
+
+}
+
+/*.news_tab_active {
+    background-color: #e9eef3;
+    border-right: solid 10px;
+    border-right-color: #dc3545;
+}*/
+#news_hover {
+    /*background-color: #e9eef3;*/
+    border-right: solid 10px;
+    border-right-color: #dc3545;
+}
+
+/*.news_tab_active:hover {
+    background-color: #e5eef8;
+}*/
+
+@media screen and (max-width: 992px) {
+    #section-news {
+        margin-top: 300px !important;
+    }
+}
+
+#actus_recentes_panel {
+    overflow: scroll;
+    height: 700px;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    /* Remove scrollbar space */
+    background: white;
+    /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: green;
+}
+
+#query_btn, #query:focus {
+    box-shadow: 0 0 0 0rem rgba(0, 123, 255, .25) !important;
+}
+
+.nav-link {
+    font-weight: 500;
+}
+.nav-link:hover {
+    font-weight: 500;
+    color:green;
+}
+
+.titre_act {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    /* line-height: 16px; */
+    /* max-height: 32px; */
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+.video-container{
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.video-iframe{
+    display: block;
+    width: 100%;
+    height: 'auto';
+}
+/* APPLICATION FORM */
+.blockquote{
+    padding:20px;
+    font-size: 16px;
+}
+.blockquote-info{
+    border: 1px solid #17a2b8;
+}
+.blockquote-info .fa{
+    color: #17a2b8;
+    font-size: 20px;
+}
+#step-4 .ion-android-checkmark-circle{
+    font-size: 156px;
+    color: rgb(3, 180, 3);
+}

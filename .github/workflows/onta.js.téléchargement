@@ -1,0 +1,66 @@
+
+
+
+$('li.nav-item').on({
+    mouseover: function(){
+        $(this).addClass('show');
+        $(this).find('a:first').attr('aria-expanded','true');
+        $(this).find('a:first').css('color','white');
+        $('div', this).addClass('show');
+
+    },
+    mouseleave: function(){
+        $(this).removeClass('show');
+        $(this).find('a:first').attr('aria-expanded','false');
+        $(this).find('a:first').css('color','#465765');
+        $('div', this).removeClass('show');
+        $(".navlang").css('color','white');
+
+    }
+});
+//Envoie message
+$('#send_message').click(function(e){
+    e.preventDefault();
+    validate =0;
+    $('.validate').each(function(){
+        if($(this).val()==''){
+            $(this).css('border-color','red');}
+        else{
+            $(this).css('border-color','green');
+            validate++}
+    });
+    if(validate == 3)
+    {
+        var form = $('#form_contact');
+
+        $.ajax({
+            'method':'post',
+            'url':'assets/php/send.message.php',
+            'async':false,
+            'data': form.serialize(),
+            'success':function(result){
+                if (result == 'success')
+                {
+                    $('#div_alert').removeClass();
+                    $('#div_alert').addClass('alert alert-success'); 
+                    $('#div_alert').html('Votre message a bien été envoyé.');
+                    $('#modal_alert').modal('show');
+                }
+                else if (result == 'notnum')
+                {
+                    $('#div_alert').removeClass();
+                    $('#div_alert').addClass('alert alert-danger'); 
+                    $('#div_alert').text('Numéro de téléphone invalide.');
+                    $('#modal_alert').modal('show');
+                }
+                else 
+                {
+                    console.log(result)
+                }
+            }
+
+        });
+    }
+
+});
+//Slide Home

@@ -1,0 +1,22 @@
+$.ajax({
+    url:'assets/php/breaking-news.php',
+    type:'post',
+    async:'false',
+    success: function(reponse){
+        var data = JSON.parse(reponse);
+        for(i=0;i<data.length;i++)
+        {
+            if (data[i]['lien'] !== null && data[i]['lien'] !== ''  && data[i]['lien']!==undefined && data[i]['lien']!==false) {
+                $('#infos_urgentes').append('<li><a target="_blank" style="font-size:14px;font-weight:800;color:red !important;text-decoration: underline;" href="'+data[i]['lien']+'">'+data[i]['titre']+'</a></li>');
+              
+            } else {
+               
+                $('#infos_urgentes').append('<li><p style="font-size:14px;font-weight:800;color:red !important">'+data[i]['titre']+'</p></li>'); 
+            }
+            
+          
+
+            $('#infos_urgentes').append('<li><i class="fa fa-exclamation-circle" style="font-size:20px;color:red"></i><li>');
+        }
+    }
+});
