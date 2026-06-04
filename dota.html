@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BattleNet Classic - Warcraft III Browser Platform</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .auth-card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        input, .chat-input-area input {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        button.danger {
+            background: #ef4444;
+        }
+        
+        button.danger:hover {
+            background: #dc2626;
+        }
+        
+        button.success {
+            background: #22c55e;
+        }
+        
+        button.success:hover {
+            background: #16a34a;
+        }
+        
+        button.warning {
+            background: #f59e0b;
+        }
+        
+        button.warning:hover {
+            background: #d97706;
+        }
+        
+        .dashboard {
+            display: none;
+        }
+        
+        .dashboard.active {
+            display: block;
+        }
+        
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+        }
+        
+        .panel {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #fbbf24;
+        }
+        
+        .room-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .room-item {
+            background: #0f172a;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #334155;
+        }
+        
+        .room-item:hover {
+            background: #1e293b;
+            border-color: #3b82f6;
+            transform: translateX(4px);
+        }
+        
+        .room-id {
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        
+        .players {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        
+        .create-room {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .chat-area {
+            height: 350px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .message {
+            padding: 8px 12px;
+            background: #1e293b;
+            border-radius: 8px;
+            font-size: 13px;
+            word-wrap: break-word;
+        }
+        
+        .message .username {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        
+        .message .text {
+            color: #cbd5e1;
+        }
+        
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .game-info {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .connection-status {
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        
+        .status-connected {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .status-connecting {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .status-disconnected {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .status-waiting {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .player-list {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .player-badge {
+            background: #3b82f6;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .player-badge.host {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+        
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚔️ BattleNet Classic ⚔️</div>
+            <div id="userInfo"></div>
+        </div>
+
+        <div id="authSection" class="auth-card">
+            <h3>🎮 Join the Battle</h3>
+            <p style="margin-bottom: 10px; color: #94a3b8;">Create an account or login to play Warcraft III with players worldwide!</p>
+            <div class="input-group">
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button onclick="login()">Login</button>
+                <button onclick="register()" class="success">Register</button>
+            </div>
+        </div>
+
+        <div id="dashboard" class="dashboard">
+            <div class="two-columns">
+                <div class="panel">
+                    <h2>🏠 Game Lobby</h2>
+                    <div id="roomList" class="room-list">
+                        <div class="loading">Loading rooms...</div>
+                    </div>
+                    <button onclick="createRoom()" class="create-room success">🆕 Create Game Room</button>
+                </div>
+
+                <div class="panel">
+                    <h2>💬 Global Chat</h2>
+                    <div id="chatArea" class="chat-area">
+                        <div class="loading">Login to join the chat!</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Type a message..." disabled>
+                        <button onclick="sendChatMessage()" id="sendChatBtn" disabled>Send</button>
+                    </div>
+                    
+                    <div id="activeGamePanel" class="game-info">
+                        <strong>🎯 Current Session:</strong> <span id="currentRoomId">None</span><br>
+                        <div id="playersInRoom" class="player-list"></div>
+                        <div id="connectionStatus" class="connection-status status-disconnected">Disconnected</div>
+                        <button onclick="leaveRoom()" class="danger" style="margin-top: 10px; width: 100%;">Leave Game Room</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== FIREBASE CONFIGURATION ==========
+        // REPLACE WITH YOUR FIREBASE PROJECT CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwdaE_ryDy6uqxF1VU8MxaOxhEajH_o0o",
+            authDomain: "warcraft-platform.firebaseapp.com",
+            projectId: "warcraft-platform",
+            storageBucket: "warcraft-platform.firebasestorage.app",
+            messagingSenderId: "611381084302",
+            appId: "1:611381084302:web:078eb7359df967952509df",
+            measurementId: "G-T3XWDPK3KP"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // ========== GLOBAL STATE ==========
+        let currentUser = null;
+        let currentRoomId = null;
+        let currentPeerConnection = null;
+        let roomListener = null;
+        let chatListener = null;
+        let currentRoomHost = false;
+        let dataChannel = null;
+        
+        // WebRTC Configuration with FREE TURN servers for maximum compatibility
+        const iceServers = {
+            iceServers: [
+                // Free Google STUN servers (handles ~85% of connections)
+                { urls: "stun:stun.l.google.com:19302" },
+                { urls: "stun:stun1.l.google.com:19302" },
+                { urls: "stun:stun2.l.google.com:19302" },
+                // Free Open Relay TURN servers (handles the remaining ~15% behind strict firewalls)
+                {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                },
+                {
+                    urls: "turn:openrelay.metered.ca:443",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                },
+                {
+                    urls: "turn:openrelay.metered.ca:80?transport=tcp",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                }
+            ]
+        };
+
+        // ========== AUTHENTICATION ==========
+        window.login = async function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                console.log('✅ Login successful!');
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('❌ Login failed: ' + error.message);
+            }
+        };
+
+        window.register = async function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password should be at least 6 characters');
+                return;
+            }
+            
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+                console.log('✅ Registration successful!');
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('❌ Registration failed: ' + error.message);
+            }
+        };
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+                document.getElementById('userInfo').innerHTML = `👤 ${user.email.split('@')[0]} <button onclick="logout()" class="danger" style="margin-left: 10px; padding: 5px 10px;">Logout</button>`;
+                
+                document.getElementById('chatInput').disabled = false;
+                document.getElementById('sendChatBtn').disabled = false;
+                
+                loadRooms();
+                loadGlobalChat();
+            } else {
+                currentUser = null;
+                currentRoomId = null;
+                document.getElementById('authSection').style.display = 'block';
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('userInfo').innerHTML = '';
+                document.getElementById('chatInput').disabled = true;
+                document.getElementById('sendChatBtn').disabled = true;
+                
+                if (roomListener) roomListener();
+                if (chatListener) chatListener();
+                
+                if (currentPeerConnection) {
+                    currentPeerConnection.close();
+                    currentPeerConnection = null;
+                }
+            }
+        });
+
+        window.logout = async function() {
+            if (currentRoomId) {
+                await leaveRoom();
+            }
+            await auth.signOut();
+        };
+
+        // ========== ROOM MANAGEMENT ==========
+        async function loadRooms() {
+            const roomsQuery = db.collection('gameRooms')
+                .where('status', '==', 'waiting')
+                .orderBy('createdAt', 'desc')
+                .limit(50);
+            
+            roomsQuery.onSnapshot((snapshot) => {
+                const roomListDiv = document.getElementById('roomList');
+                if (snapshot.empty) {
+                    roomListDiv.innerHTML = '<div class="loading">🎮 No active rooms. Create one to start playing!</div>';
+                    return;
+                }
+                
+                roomListDiv.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const roomDiv = document.createElement('div');
+                    roomDiv.className = 'room-item';
+                    roomDiv.onclick = () => joinRoom(doc.id);
+                    roomDiv.innerHTML = `
+                        <div class="room-id">🎮 Room: ${doc.id.slice(0, 8)}</div>
+                        <div class="players">👥 Players: ${data.players?.length || 1}/12</div>
+                        <div class="players">👑 Host: ${data.hostName || data.hostId?.slice(0, 8)}</div>
+                    `;
+                    roomListDiv.appendChild(roomDiv);
+                });
+            });
+        }
+
+        window.createRoom = async function() {
+            if (currentRoomId) {
+                alert('You are already in a room. Leave it first.');
+                return;
+            }
+            
+            try {
+                const roomRef = db.collection('gameRooms').doc();
+                const roomId = roomRef.id;
+                
+                const peerConnection = new RTCPeerConnection(iceServers);
+                
+                // Set up data channel for game commands
+                dataChannel = peerConnection.createDataChannel('gameCommands');
+                setupDataChannel(dataChannel);
+                
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                
+                const candidatesRef = roomRef.collection('candidates');
+                peerConnection.addEventListener('icecandidate', (event) => {
+                    if (event.candidate) {
+                        candidatesRef.add({
+                            candidate: event.candidate.toJSON(),
+                            senderId: currentUser.uid,
+                            type: 'host',
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                });
+                
+                await roomRef.set({
+                    hostId: currentUser.uid,
+                    hostName: currentUser.email.split('@')[0],
+                    offer: { type: offer.type, sdp: offer.sdp },
+                    players: [currentUser.uid],
+                    playerNames: [currentUser.email.split('@')[0]],
+                    status: 'waiting',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                currentRoomId = roomId;
+                currentPeerConnection = peerConnection;
+                currentRoomHost = true;
+                setupRoomListeners(roomRef, true);
+                document.getElementById('currentRoomId').innerText = roomId.slice(0, 8);
+                updateConnectionStatus('waiting', '🎮 Waiting for players to join...');
+                
+                console.log('✅ Room created:', roomId);
+                alert('Room created! Share the room code or tell friends to join via the lobby.');
+            } catch (error) {
+                console.error('Error creating room:', error);
+                alert('Failed to create room: ' + error.message);
+            }
+        };
+
+        window.joinRoom = async function(roomId) {
+            if (currentRoomId) {
+                alert('You are already in a room. Leave it first.');
+                return;
+            }
+            
+            try {
+                const roomRef = db.collection('gameRooms').doc(roomId);
+                const roomDoc = await roomRef.get();
+                
+                if (!roomDoc.exists) {
+                    alert('Room no longer exists!');
+                    return;
+                }
+                
+                const roomData = roomDoc.data();
+                if (roomData.players.length >= 12) {
+                    alert('Room is full!');
+                    return;
+                }
+                
+                const peerConnection = new RTCPeerConnection(iceServers);
+                
+                // Listen for data channel from host
+                peerConnection.ondatachannel = (event) => {
+                    dataChannel = event.channel;
+                    setupDataChannel(dataChannel);
+                };
+                
+                const offer = new RTCSessionDescription(roomData.offer);
+                await peerConnection.setRemoteDescription(offer);
+                
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                
+                const candidatesRef = roomRef.collection('candidates');
+                peerConnection.addEventListener('icecandidate', (event) => {
+                    if (event.candidate) {
+                        candidatesRef.add({
+                            candidate: event.candidate.toJSON(),
+                            senderId: currentUser.uid,
+                            type: 'joiner',
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                });
+                
+                await roomRef.update({
+                    answer: { type: answer.type, sdp: answer.sdp },
+                    players: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+                    playerNames: firebase.firestore.FieldValue.arrayUnion(currentUser.email.split('@')[0])
+                });
+                
+                currentRoomId = roomId;
+                currentPeerConnection = peerConnection;
+                currentRoomHost = false;
+                setupRoomListeners(roomRef, false);
+                document.getElementById('currentRoomId').innerText = roomId.slice(0, 8);
+                updateConnectionStatus('connecting', '🔌 Connecting to host...');
+                
+                console.log('✅ Joined room:', roomId);
+            } catch (error) {
+                console.error('Error joining room:', error);
+                alert('Failed to join room: ' + error.message);
+            }
+        };
+        
+        function setupRoomListeners(roomRef, isHost) {
+            roomListener = roomRef.onSnapshot((snapshot) => {
+                const data = snapshot.data();
+                if (!data) {
+                    if (currentRoomId) {
+                        alert('The game room has been closed.');
+                        leaveRoom();
+                    }
+                    return;
+                }
+                
+                const playerListDiv = document.getElementById('playersInRoom');
+                playerListDiv.innerHTML = (data.playerNames || []).map(name => 
+                    `<div class="player-badge ${name === data.hostName ? 'host' : ''}">${name === data.hostName ? '👑 ' : '🎮 '}${name}</div>`
+                ).join('');
+            });
+            
+            const candidatesQuery = roomRef.collection('candidates');
+            candidatesQuery.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added' && currentPeerConnection) {
+                        const candidateData = change.doc.data();
+                        if (candidateData.senderId === currentUser.uid) return;
+                        
+                        const candidate = new RTCIceCandidate(candidateData.candidate);
+                        currentPeerConnection.addIceCandidate(candidate).catch(e => console.error('ICE candidate error:', e));
+                    }
+                });
+            });
+            
+            currentPeerConnection.addEventListener('connectionstatechange', () => {
+                const state = currentPeerConnection.connectionState;
+                console.log('Connection state:', state);
+                if (state === 'connected') {
+                    updateConnectionStatus('connected', '✅ Connected! Ready to play!');
+                } else if (state === 'failed') {
+                    updateConnectionStatus('disconnected', '❌ Connection failed. Try rejoining.');
+                }
+            });
+        }
+        
+        function setupDataChannel(channel) {
+            channel.onopen = () => {
+                console.log('📡 Data channel opened');
+                updateConnectionStatus('connected', '✅ Game data channel active! Ready to send commands.');
+            };
+            channel.onmessage = (event) => {
+                try {
+                    const command = JSON.parse(event.data);
+                    console.log('🎮 Game command received:', command);
+                    // Here you would pass commands to your Warsmash engine
+                    // window.warsmash?.handleCommand(command);
+                } catch (e) {
+                    console.error('Failed to parse command:', e);
+                }
+            };
+            channel.onerror = (error) => {
+                console.error('Data channel error:', error);
+            };
+        }
+        
+        function updateConnectionStatus(status, message) {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.className = `connection-status status-${status}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        window.leaveRoom = async function() {
+            if (!currentRoomId) return;
+            
+            try {
+                if (currentPeerConnection) {
+                    currentPeerConnection.close();
+                    currentPeerConnection = null;
+                }
+                if (roomListener) {
+                    roomListener();
+                    roomListener = null;
+                }
+                
+                const roomRef = db.collection('gameRooms').doc(currentRoomId);
+                await roomRef.update({
+                    players: firebase.firestore.FieldValue.arrayRemove(currentUser.uid),
+                    playerNames: firebase.firestore.FieldValue.arrayRemove(currentUser.email.split('@')[0])
+                });
+                
+                const roomDoc = await roomRef.get();
+                if (roomDoc.exists && (roomDoc.data()?.players?.length || 0) === 0) {
+                    await roomRef.delete();
+                }
+                
+                currentRoomId = null;
+                currentRoomHost = false;
+                dataChannel = null;
+                document.getElementById('currentRoomId').innerText = 'None';
+                document.getElementById('playersInRoom').innerHTML = '';
+                updateConnectionStatus('disconnected', 'Disconnected');
+                
+                console.log('Left room successfully');
+            } catch (error) {
+                console.error('Error leaving room:', error);
+            }
+        };
+        
+        // ========== CHAT SYSTEM ==========
+        async function loadGlobalChat() {
+            const chatQuery = db.collection('globalChat')
+                .orderBy('timestamp', 'desc')
+                .limit(100);
+            
+            chatListener = chatQuery.onSnapshot((snapshot) => {
+                const chatArea = document.getElementById('chatArea');
+                const messages = [];
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        messages.unshift(`
+                            <div class="message">
+                                <span class="username">${escapeHtml(data.username)}:</span>
+                                <span class="text">${escapeHtml(data.message)}</span>
+                                <span style="font-size: 10px; color: #64748b;"> ${new Date(data.timestamp?.toDate()).toLocaleTimeString()}</span>
+                            </div>
+                        `);
+                    }
+                });
+                if (messages.length === 0 && !currentUser) {
+                    chatArea.innerHTML = '<div class="loading">Login to join the chat!</div>';
+                } else if (messages.length === 0) {
+                    chatArea.innerHTML = '<div class="loading">No messages yet. Start the conversation!</div>';
+                } else {
+                    chatArea.innerHTML = messages.join('');
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                }
+            });
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        window.sendChatMessage = async function() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message || !currentUser) return;
+            
+            try {
+                await db.collection('globalChat').add({
+                    userId: currentUser.uid,
+                    username: currentUser.email.split('@')[0],
+                    message: message.substring(0, 500),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                input.value = '';
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                alert('Failed to send message: ' + error.message);
+            }
+        };
+        
+        document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+        
+        // Public function to send game commands via WebRTC
+        window.sendGameCommand = function(command) {
+            if (dataChannel && dataChannel.readyState === 'open') {
+                dataChannel.send(JSON.stringify(command));
+                console.log('📤 Game command sent:', command);
+                return true;
+            } else {
+                console.warn('Data channel not ready. State:', dataChannel?.readyState);
+                return false;
+            }
+        };
+        
+        console.log('🔥 BattleNet Classic is ready! Firebase + WebRTC active.');
+        console.log('📡 WebRTC configured with STUN + TURN servers for maximum compatibility.');
+        console.log('💡 Use window.sendGameCommand({type: "move", x: 100, y: 200}) to send game commands.');
+    </script>
+</body>
+</html>
