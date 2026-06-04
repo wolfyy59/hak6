@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BattleNet Classic - Warcraft III Browser Platform</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .auth-card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        input, select, .chat-input-area input {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            flex: 1;
+            min-width: 200px;
+        }
+        input:focus, select:focus { outline: none; border-color: #3b82f6; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        button:hover { background: #2563eb; transform: translateY(-1px); }
+        button.danger { background: #ef4444; }
+        button.danger:hover { background: #dc2626; }
+        button.success { background: #22c55e; }
+        button.success:hover { background: #16a34a; }
+        button.warning { background: #f59e0b; }
+        button.warning:hover { background: #d97706; }
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+        .three-columns {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 0.9fr;
+            gap: 25px;
+        }
+        .panel {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #fbbf24;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+        .game-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .game-item {
+            background: #0f172a;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #334155;
+        }
+        .game-item:hover {
+            background: #1e293b;
+            border-color: #3b82f6;
+            transform: translateX(4px);
+        }
+        .game-name { font-weight: bold; color: #fbbf24; }
+        .game-info { font-size: 11px; color: #94a3b8; margin-top: 5px; }
+        .selected-game {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #3b82f6;
+        }
+        .chat-area {
+            height: 300px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .message {
+            padding: 8px 12px;
+            background: #1e293b;
+            border-radius: 8px;
+            font-size: 13px;
+            word-wrap: break-word;
+        }
+        .message .username { color: #fbbf24; font-weight: bold; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .connection-status {
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .status-connected { background: #22c55e; color: white; }
+        .status-connecting { background: #f59e0b; color: white; }
+        .status-disconnected { background: #ef4444; color: white; }
+        .status-waiting { background: #3b82f6; color: white; }
+        .player-list {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .player-badge {
+            background: #3b82f6;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .player-badge.host { background: #f59e0b; color: #0f172a; }
+        .loading { text-align: center; padding: 20px; color: #64748b; }
+        .file-input-area {
+            border: 2px dashed #334155;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-input-area:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .file-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .badge-mpq { background: #8b5cf6; }
+        .badge-map { background: #22c55e; }
+        @media (max-width: 1024px) { .three-columns { grid-template-columns: 1fr; } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚔️ BattleNet Classic ⚔️</div>
+            <div id="userInfo"></div>
+        </div>
+
+        <div id="authSection" class="auth-card">
+            <h3>🎮 Join the Battle</h3>
+            <p style="margin-bottom: 10px; color: #94a3b8;">Create an account to play Warcraft III with players worldwide!</p>
+            <div class="input-group">
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button onclick="login()">Login</button>
+                <button onclick="register()" class="success">Register</button>
+            </div>
+        </div>
+
+        <div id="dashboard" class="dashboard">
+            <div class="three-columns">
+                <div class="panel">
+                    <h2>🎮 Host Game</h2>
+                    <div class="file-input-area" onclick="document.getElementById('gameFileInput').click()">
+                        📁 Click to browse for Warcraft III files<br>
+                        <small style="color:#64748b">Supported: .MPQ (game data), .W3X / .W3M (maps)</small>
+                    </div>
+                    <input type="file" id="gameFileInput" accept=".mpq,.w3x,.w3m" style="display:none" onchange="selectGameFile(this)">
+                    <div id="selectedGameInfo" class="selected-game" style="display:none">
+                        <strong>📄 Selected File:</strong> <span id="selectedGameName"></span><br>
+                        <small id="selectedGameDetails"></small>
+                    </div>
+                    <div id="hostControls" style="display:none">
+                        <input type="text" id="gameTitle" placeholder="Game title (e.g., Defense of the Ancients)" style="width:100%; margin-bottom:10px">
+                        <select id="gameType" style="width:100%; margin-bottom:10px">
+                            <option value="melee">Melee Game</option>
+                            <option value="custom">Custom Game</option>
+                            <option value="campaign">Campaign</option>
+                        </select>
+                        <select id="maxPlayers" style="width:100%; margin-bottom:10px">
+                            <option value="2">2 Players</option>
+                            <option value="4">4 Players</option>
+                            <option value="6" selected>6 Players</option>
+                            <option value="8">8 Players</option>
+                            <option value="12">12 Players</option>
+                        </select>
+                        <button onclick="startHosting()" class="success" style="width:100%">🚀 Start Hosting Game</button>
+                    </div>
+                    <div style="margin-top: 15px; padding: 12px; background: #0f172a; border-radius: 8px;">
+                        <strong>💡 How to get Warcraft III files:</strong><br>
+                        <small>1. Own a licensed copy of Warcraft III (Classic or Reforged)<br>
+                        2. Locate the installation folder (e.g., C:\Program Files\Warcraft III\)<br>
+                        3. Select your .MPQ files (war3.mpq, war3x.mpq, war3patch.mpq)</small>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🌍 Hosted Games</h2>
+                    <div id="hostedGamesList" class="game-list">
+                        <div class="loading">No hosted games. Create one!</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>💬 Global Chat</h2>
+                    <div id="chatArea" class="chat-area">
+                        <div class="loading">Login to join the chat!</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Type a message..." disabled>
+                        <button onclick="sendChatMessage()" id="sendChatBtn" disabled>Send</button>
+                    </div>
+                    
+                    <div id="activeGamePanel" style="margin-top:15px; background:#0f172a; border-radius:8px; padding:12px">
+                        <strong>🎯 Current Session:</strong> <span id="currentGameId">None</span><br>
+                        <div id="playersInGame" class="player-list"></div>
+                        <div id="connectionStatus" class="connection-status status-disconnected">Disconnected</div>
+                        <button onclick="leaveGame()" class="danger" style="margin-top:10px; width:100%">Leave Game</button>
+                        <button id="startGameBtn" onclick="startGame()" class="success" style="margin-top:10px; width:100%; display:none">▶️ Start Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwdaE_ryDy6uqxF1VU8MxaOxhEajH_o0o",
+            authDomain: "warcraft-platform.firebaseapp.com",
+            projectId: "warcraft-platform",
+            storageBucket: "warcraft-platform.firebasestorage.app",
+            messagingSenderId: "611381084302",
+            appId: "1:611381084302:web:078eb7359df967952509df",
+            measurementId: "G-T3XWDPK3KP"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let currentUser = null;
+        let currentGameId = null;
+        let currentPeerConnection = null;
+        let gameListener = null;
+        let chatListener = null;
+        let currentGameHost = false;
+        let dataChannel = null;
+        let selectedGameFileData = null;  // Store file data as base64
+        let selectedGameFileName = null;
+        let selectedGameFileSize = null;
+        let selectedGameFileExt = null;
+        
+        const iceServers = {
+            iceServers: [
+                { urls: "stun:stun.l.google.com:19302" },
+                { urls: "stun:stun1.l.google.com:19302" },
+                { urls: "stun:stun2.l.google.com:19302" },
+                { urls: "turn:openrelay.metered.ca:80", username: "openrelayproject", credential: "openrelayproject" },
+                { urls: "turn:openrelay.metered.ca:443", username: "openrelayproject", credential: "openrelayproject" }
+            ]
+        };
+
+        window.login = async function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            if (!email || !password) { alert('Please enter both email and password'); return; }
+            try { await auth.signInWithEmailAndPassword(email, password); } 
+            catch (error) { alert('❌ Login failed: ' + error.message); }
+        };
+
+        window.register = async function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            if (!email || !password) { alert('Please enter both email and password'); return; }
+            if (password.length < 6) { alert('Password should be at least 6 characters'); return; }
+            try { await auth.createUserWithEmailAndPassword(email, password); } 
+            catch (error) { alert('❌ Registration failed: ' + error.message); }
+        };
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+                document.getElementById('userInfo').innerHTML = `👤 ${user.email.split('@')[0]} <button onclick="logout()" class="danger" style="margin-left:10px; padding:5px 10px;">Logout</button>`;
+                document.getElementById('chatInput').disabled = false;
+                document.getElementById('sendChatBtn').disabled = false;
+                loadHostedGames();
+                loadGlobalChat();
+            } else {
+                currentUser = null;
+                currentGameId = null;
+                document.getElementById('authSection').style.display = 'block';
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('userInfo').innerHTML = '';
+                document.getElementById('chatInput').disabled = true;
+                document.getElementById('sendChatBtn').disabled = true;
+                if (gameListener) gameListener();
+                if (chatListener) chatListener();
+                if (currentPeerConnection) currentPeerConnection.close();
+            }
+        });
+
+        window.logout = async function() {
+            if (currentGameId) await leaveGame();
+            await auth.signOut();
+        };
+
+        window.selectGameFile = function(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                selectedGameFileName = file.name;
+                selectedGameFileSize = file.size;
+                const parts = selectedGameFileName.split('.');
+                selectedGameFileExt = parts[parts.length - 1].toLowerCase();
+                
+                // Read file as base64
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedGameFileData = e.target.result.split(',')[1]; // Remove data URL prefix
+                    console.log('File loaded:', selectedGameFileName, 'Size:', selectedGameFileData.length);
+                    
+                    let fileTypeText = '';
+                    let fileTypeClass = '';
+                    
+                    if (selectedGameFileExt === 'mpq') {
+                        fileTypeText = '📦 Game Data Archive (MPQ) - Required for Warsmash';
+                        fileTypeClass = 'badge-mpq';
+                    } else if (selectedGameFileExt === 'w3x' || selectedGameFileExt === 'w3m') {
+                        fileTypeText = '🗺️ Custom Map File';
+                        fileTypeClass = 'badge-map';
+                    } else {
+                        fileTypeText = '⚠️ Unknown file type';
+                        fileTypeClass = 'badge-other';
+                    }
+                    
+                    document.getElementById('selectedGameName').innerHTML = `${selectedGameFileName} <span class="file-type-badge ${fileTypeClass}">${selectedGameFileExt.toUpperCase()}</span>`;
+                    document.getElementById('selectedGameDetails').innerHTML = `${fileTypeText} - ${(selectedGameFileSize / 1024).toFixed(2)} KB`;
+                    document.getElementById('selectedGameInfo').style.display = 'block';
+                    document.getElementById('hostControls').style.display = 'block';
+                    
+                    if (selectedGameFileExt === 'mpq') {
+                        document.getElementById('gameType').value = 'melee';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.startHosting = async function() {
+            if (currentGameId) { alert('You are already in a game. Leave it first.'); return; }
+            if (!selectedGameFileData) { alert('Please select a game file first and wait for it to load!'); return; }
+            
+            const gameTitle = document.getElementById('gameTitle').value.trim();
+            if (!gameTitle) { alert('Please enter a game title'); return; }
+            
+            const gameType = document.getElementById('gameType').value;
+            const maxPlayers = parseInt(document.getElementById('maxPlayers').value);
+            
+            try {
+                const gameRef = db.collection('hostedGames').doc();
+                const gameId = gameRef.id;
+                
+                const peerConnection = new RTCPeerConnection(iceServers);
+                dataChannel = peerConnection.createDataChannel('gameCommands');
+                setupDataChannel(dataChannel);
+                
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                
+                const candidatesRef = gameRef.collection('candidates');
+                peerConnection.addEventListener('icecandidate', (event) => {
+                    if (event.candidate) {
+                        candidatesRef.add({
+                            candidate: event.candidate.toJSON(),
+                            senderId: currentUser.uid,
+                            type: 'host'
+                        });
+                    }
+                });
+                
+                // Prepare game data for Firestore
+                const gameData = {
+                    hostId: currentUser.uid,
+                    hostName: currentUser.email.split('@')[0],
+                    gameTitle: gameTitle,
+                    gameType: gameType,
+                    fileName: selectedGameFileName,
+                    fileExt: selectedGameFileExt,
+                    fileSize: selectedGameFileSize,
+                    fileData: selectedGameFileData,
+                    maxPlayers: maxPlayers,
+                    offer: { type: offer.type, sdp: offer.sdp },
+                    players: [currentUser.uid],
+                    playerNames: [currentUser.email.split('@')[0]],
+                    status: 'waiting',
+                    gameStarted: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await gameRef.set(gameData);
+                
+                currentGameId = gameId;
+                currentPeerConnection = peerConnection;
+                currentGameHost = true;
+                setupGameListeners(gameRef);
+                document.getElementById('currentGameId').innerText = gameTitle;
+                document.getElementById('startGameBtn').style.display = 'block';
+                updateConnectionStatus('waiting', '🎮 Waiting for players to join...');
+                
+                alert(`Game hosted!\nTitle: ${gameTitle}\nType: ${gameType.toUpperCase()}\nFile: ${selectedGameFileName}\nPlayers can now join from around the world.`);
+            } catch (error) {
+                console.error('Error hosting game:', error);
+                alert('Failed to host game: ' + error.message);
+            }
+        };
+
+        window.joinGame = async function(gameId, gameTitle) {
+            if (currentGameId) { alert('You are already in a game. Leave it first.'); return; }
+            
+            try {
+                const gameRef = db.collection('hostedGames').doc(gameId);
+                const gameDoc = await gameRef.get();
+                
+                if (!gameDoc.exists) { alert('Game no longer exists!'); return; }
+                const gameData = gameDoc.data();
+                if (gameData.gameStarted) { alert('Game has already started!'); return; }
+                if (gameData.players.length >= gameData.maxPlayers) { alert('Game is full!'); return; }
+                
+                const peerConnection = new RTCPeerConnection(iceServers);
+                
+                peerConnection.ondatachannel = (event) => {
+                    dataChannel = event.channel;
+                    setupDataChannel(dataChannel);
+                };
+                
+                const offer = new RTCSessionDescription(gameData.offer);
+                await peerConnection.setRemoteDescription(offer);
+                
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                
+                const candidatesRef = gameRef.collection('candidates');
+                peerConnection.addEventListener('icecandidate', (event) => {
+                    if (event.candidate) {
+                        candidatesRef.add({
+                            candidate: event.candidate.toJSON(),
+                            senderId: currentUser.uid,
+                            type: 'joiner'
+                        });
+                    }
+                });
+                
+                await gameRef.update({
+                    answer: { type: answer.type, sdp: answer.sdp },
+                    players: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+                    playerNames: firebase.firestore.FieldValue.arrayUnion(currentUser.email.split('@')[0])
+                });
+                
+                currentGameId = gameId;
+                currentPeerConnection = peerConnection;
+                currentGameHost = false;
+                setupGameListeners(gameRef);
+                document.getElementById('currentGameId').innerText = gameTitle;
+                document.getElementById('startGameBtn').style.display = 'none';
+                updateConnectionStatus('connecting', '🔌 Connecting to host...');
+                
+            } catch (error) {
+                console.error('Error joining game:', error);
+                alert('Failed to join game: ' + error.message);
+            }
+        };
+        
+        async function loadHostedGames() {
+            const gamesQuery = db.collection('hostedGames')
+                .where('status', '==', 'waiting')
+                .where('gameStarted', '==', false)
+                .orderBy('createdAt', 'desc');
+            
+            gamesQuery.onSnapshot((snapshot) => {
+                const gamesListDiv = document.getElementById('hostedGamesList');
+                if (snapshot.empty) {
+                    gamesListDiv.innerHTML = '<div class="loading">🎮 No hosted games. Create one!</div>';
+                    return;
+                }
+                
+                gamesListDiv.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const fileIcon = data.fileExt === 'mpq' ? '📦' : '🗺️';
+                    const gameDiv = document.createElement('div');
+                    gameDiv.className = 'game-item';
+                    gameDiv.onclick = () => joinGame(doc.id, data.gameTitle);
+                    gameDiv.innerHTML = `
+                        <div class="game-name">🎮 ${escapeHtml(data.gameTitle)}</div>
+                        <div class="game-info">${fileIcon} ${escapeHtml(data.fileName)} | ${data.gameType.toUpperCase()} | 👥 ${data.players?.length || 1}/${data.maxPlayers} | 👑 ${escapeHtml(data.hostName)}</div>
+                    `;
+                    gamesListDiv.appendChild(gameDiv);
+                });
+            });
+        }
+        
+        function setupGameListeners(gameRef) {
+            gameListener = gameRef.onSnapshot((snapshot) => {
+                const data = snapshot.data();
+                if (!data) {
+                    if (currentGameId) { alert('The game has been closed.'); leaveGame(); }
+                    return;
+                }
+                
+                const playerListDiv = document.getElementById('playersInGame');
+                playerListDiv.innerHTML = (data.playerNames || []).map(name => 
+                    `<div class="player-badge ${name === data.hostName ? 'host' : ''}">${name === data.hostName ? '👑 ' : '🎮 '}${escapeHtml(name)}</div>`
+                ).join('');
+                
+                if (data.gameStarted && currentGameHost) {
+                    document.getElementById('startGameBtn').style.display = 'none';
+                }
+            });
+            
+            const candidatesQuery = gameRef.collection('candidates');
+            candidatesQuery.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added' && currentPeerConnection) {
+                        const candidateData = change.doc.data();
+                        if (candidateData.senderId === currentUser.uid) return;
+                        const candidate = new RTCIceCandidate(candidateData.candidate);
+                        currentPeerConnection.addIceCandidate(candidate).catch(e => console.error('ICE error:', e));
+                    }
+                });
+            });
+            
+            currentPeerConnection.addEventListener('connectionstatechange', () => {
+                const state = currentPeerConnection.connectionState;
+                if (state === 'connected') updateConnectionStatus('connected', '✅ Connected! Ready to play!');
+                else if (state === 'failed') updateConnectionStatus('disconnected', '❌ Connection failed.');
+            });
+        }
+        
+        window.startGame = async function() {
+            if (!currentGameId || !currentGameHost) { alert('Only the host can start the game!'); return; }
+            try {
+                await db.collection('hostedGames').doc(currentGameId).update({ gameStarted: true, status: 'playing' });
+                updateConnectionStatus('connected', '⚔️ GAME STARTED!');
+                if (dataChannel && dataChannel.readyState === 'open') {
+                    dataChannel.send(JSON.stringify({ type: 'GAME_START', timestamp: Date.now() }));
+                }
+                alert('Game started!');
+            } catch (error) { console.error('Error starting game:', error); alert('Failed to start game: ' + error.message); }
+        };
+        
+        function setupDataChannel(channel) {
+            channel.onopen = () => { console.log('📡 Data channel opened'); updateConnectionStatus('connected', '✅ Ready to play!'); };
+            channel.onmessage = (event) => {
+                try {
+                    const command = JSON.parse(event.data);
+                    console.log('🎮 Command received:', command);
+                    if (command.type === 'GAME_START') updateConnectionStatus('connected', '⚔️ GAME IN PROGRESS!');
+                } catch (e) { console.error('Parse error:', e); }
+            };
+        }
+        
+        function updateConnectionStatus(status, message) {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.className = `connection-status status-${status}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        window.leaveGame = async function() {
+            if (!currentGameId) return;
+            try {
+                if (currentPeerConnection) currentPeerConnection.close();
+                if (gameListener) gameListener();
+                const gameRef = db.collection('hostedGames').doc(currentGameId);
+                await gameRef.update({ players: firebase.firestore.FieldValue.arrayRemove(currentUser.uid), playerNames: firebase.firestore.FieldValue.arrayRemove(currentUser.email.split('@')[0]) });
+                const gameDoc = await gameRef.get();
+                if (gameDoc.exists && (gameDoc.data()?.players?.length || 0) === 0) await gameRef.delete();
+                currentGameId = null; currentGameHost = false; dataChannel = null;
+                document.getElementById('currentGameId').innerText = 'None';
+                document.getElementById('playersInGame').innerHTML = '';
+                document.getElementById('startGameBtn').style.display = 'none';
+                updateConnectionStatus('disconnected', 'Disconnected');
+            } catch (error) { console.error('Error leaving game:', error); }
+        };
+        
+        async function loadGlobalChat() {
+            const chatQuery = db.collection('globalChat').orderBy('timestamp', 'desc').limit(100);
+            chatListener = chatQuery.onSnapshot((snapshot) => {
+                const chatArea = document.getElementById('chatArea');
+                const messages = [];
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        messages.unshift(`<div class="message"><span class="username">${escapeHtml(data.username)}:</span> <span class="text">${escapeHtml(data.message)}</span> <span style="font-size:10px;color:#64748b;">${new Date(data.timestamp?.toDate()).toLocaleTimeString()}</span></div>`);
+                    }
+                });
+                if (messages.length === 0 && !currentUser) chatArea.innerHTML = '<div class="loading">Login to join the chat!</div>';
+                else if (messages.length === 0) chatArea.innerHTML = '<div class="loading">No messages yet.</div>';
+                else { chatArea.innerHTML = messages.join(''); chatArea.scrollTop = chatArea.scrollHeight; }
+            });
+        }
+        
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        
+        window.sendChatMessage = async function() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message || !currentUser) return;
+            try {
+                await db.collection('globalChat').add({
+                    userId: currentUser.uid,
+                    username: currentUser.email.split('@')[0],
+                    message: message.substring(0, 500),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                input.value = '';
+            } catch (error) { console.error('Failed to send message:', error); }
+        };
+        
+        document.getElementById('chatInput')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+        
+        console.log('🔥 BattleNet Classic ready! Select MPQ files (war3.mpq, war3x.mpq, war3patch.mpq) or custom maps (.w3x, .w3m)');
+    </script>
+</body>
+</html>
