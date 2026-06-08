@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>File Manager | BLUERED Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 30%, #0a0a1a, #020108);
+            min-height: 100vh;
+            font-family: 'SF Pro Display', 'Segoe UI', 'Inter', system-ui, sans-serif;
+            padding: 20px 16px;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(12, 18, 32, 0.75);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 1.5rem;
+            box-shadow: 0 40px 70px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(51, 204, 255, 0.3);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 100, 150, 0.3);
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FF6B9D, #33DDFF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(105deg, #ff3366, #cc0066);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 48px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-back:active {
+            transform: scale(0.96);
+        }
+
+        .stats {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 40px;
+            padding: 10px 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #7df9ff;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .photo-card {
+            background: rgba(20, 28, 48, 0.8);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(51, 204, 255, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border-color: #ff3366;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .photo-info {
+            padding: 12px;
+        }
+
+        .photo-name {
+            font-size: 0.7rem;
+            color: #ffccdd;
+            word-break: break-all;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+
+        .photo-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-view, .btn-delete {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-view {
+            background: #33ccff80;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #33ccff;
+        }
+
+        .btn-delete {
+            background: #ff336680;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff3366;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #ff99cc;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 60px;
+            color: #7f8fa4;
+            font-size: 1.1rem;
+        }
+
+        .delete-all {
+            background: rgba(255, 51, 102, 0.2);
+            border: 1px solid #ff3366;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: #ff99cc;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: all 0.2s;
+        }
+
+        .delete-all:hover {
+            background: rgba(255, 51, 102, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .gallery-container {
+                padding: 1rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .photo-card img {
+                height: 150px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="gallery-container">
+    <div class="header">
+        <h1>📁 FILE MANAGER</h1>
+        <div>
+            <button class="btn-back" onclick="window.location.href='index.html'">📸 BACK TO CAMERA</button>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div class="stats" id="stats">Loading files...</div>
+        <button class="delete-all" id="deleteAllBtn" style="display: none;">🗑️ DELETE ALL FILES</button>
+    </div>
+
+    <div id="galleryGrid" class="gallery-grid">
+        <div class="loading">Loading your photos...</div>
+    </div>
+</div>
+
+<script>
+    const galleryGrid = document.getElementById('galleryGrid');
+    const statsDiv = document.getElementById('stats');
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
+    
+    let currentFiles = [];
+    
+    async function loadFiles() {
+        galleryGrid.innerHTML = '<div class="loading">📡 Loading your photos...</div>';
+        
+        try {
+            const response = await fetch('list_files.php');
+            const files = await response.json();
+            currentFiles = files;
+            
+            if (files.length === 0) {
+                galleryGrid.innerHTML = '<div class="empty-message">📭 No photos yet. Go to camera and take some beautiful shots!</div>';
+                statsDiv.innerHTML = `📊 Total: 0 files`;
+                deleteAllBtn.style.display = 'none';
+                return;
+            }
+            
+            deleteAllBtn.style.display = 'inline-block';
+            statsDiv.innerHTML = `📊 Total: ${files.length} file${files.length > 1 ? 's' : ''}`;
+            
+            galleryGrid.innerHTML = '';
+            
+            files.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                
+                const img = document.createElement('img');
+                img.src = file.url;
+                img.alt = file.name;
+                img.onclick = () => window.open(file.url, '_blank');
+                
+                const info = document.createElement('div');
+                info.className = 'photo-info';
+                
+                const nameSpan = document.createElement('div');
+                nameSpan.className = 'photo-name';
+                nameSpan.innerText = file.name;
+                
+                const actions = document.createElement('div');
+                actions.className = 'photo-actions';
+                
+                const viewBtn = document.createElement('button');
+                viewBtn.className = 'btn-view';
+                viewBtn.innerText = '👁️ VIEW';
+                viewBtn.onclick = () => window.open(file.url, '_blank');
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn-delete';
+                deleteBtn.innerText = '🗑️ DELETE';
+                deleteBtn.onclick = () => deleteFile(file.name, card);
+                
+                actions.appendChild(viewBtn);
+                actions.appendChild(deleteBtn);
+                info.appendChild(nameSpan);
+                info.appendChild(actions);
+                card.appendChild(img);
+                card.appendChild(info);
+                galleryGrid.appendChild(card);
+            });
+            
+        } catch (error) {
+            console.error('Error loading files:', error);
+            galleryGrid.innerHTML = '<div class="empty-message">❌ Error loading files. Make sure list_files.php exists.</div>';
+        }
+    }
+    
+    async function deleteFile(filename, cardElement) {
+        if (!confirm(`Delete "${filename}"? This action cannot be undone.`)) return;
+        
+        try {
+            const response = await fetch('delete_file.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: filename })
+            });
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                cardElement.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    cardElement.remove();
+                    loadFiles();
+                }, 200);
+            } else {
+                alert('Delete failed: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error deleting file');
+        }
+    }
+    
+    deleteAllBtn.addEventListener('click', async () => {
+        if (currentFiles.length === 0) return;
+        if (!confirm(`⚠️ WARNING: This will delete ALL ${currentFiles.length} photos. This cannot be undone! Are you ABSOLUTELY sure?`)) return;
+        
+        try {
+            const response = await fetch('delete_all.php', { method: 'POST' });
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                alert(`Deleted ${result.deleted_count} files`);
+                loadFiles();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error deleting all files');
+        }
+    });
+    
+    loadFiles();
+</script>
+</body>
+</html>
